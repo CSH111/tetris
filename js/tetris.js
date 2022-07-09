@@ -58,16 +58,27 @@ function renderBlocks() {
   const previousTarget = document.querySelectorAll(`.${type}`);
   previousTarget.forEach((cell) => {
     cell.classList.remove(type);
-    console.log(cell);
   });
 
   BLOCKS[type][direction].forEach((cell) => {
     const x = cell[0] + left;
     const y = cell[1] + top;
 
-    const target = matrix.childNodes[y].childNodes[0].childNodes[x];
-    target.classList.add(type);
+    const target = matrix.childNodes[y]
+      ? matrix.childNodes[y].childNodes[0].childNodes[x]
+      : null;
+    if (target) {
+      target.classList.add(type);
+    } else {
+      tempMovingItem = { ...movingItem };
+      setTimeout(() => {
+        renderBlocks(), 0;
+      });
+    }
   });
+  movingItem.left = left;
+  movingItem.top = top;
+  movingItem.direction = direction;
 }
 
 // event
@@ -84,16 +95,20 @@ function getKeyType(event) {
       break;
     case 38:
       moveBlock("top", -1);
+      4;
 
       break;
     case 40:
       moveBlock("top", 1);
+      break;
 
+    default:
       break;
   }
+}
+function moveBlock(moveDirection, amount) {
+  tempMovingItem[moveDirection] += amount;
   renderBlocks();
 }
 
-function moveBlock(moveDirection, amount) {
-  tempMovingItem[moveDirection] += amount;
-}
+//null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
