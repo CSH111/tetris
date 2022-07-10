@@ -16,9 +16,24 @@ const BLOCKS = {
       [1, 0],
       [1, 1],
     ],
-    [],
-    [],
-    [],
+    [
+      [1, 0],
+      [1, 1],
+      [1, 2],
+      [2, 1],
+    ],
+    [
+      [0, 1],
+      [1, 1],
+      [2, 1],
+      [1, 2],
+    ],
+    [
+      [1, 0],
+      [1, 1],
+      [1, 2],
+      [0, 1],
+    ],
   ],
 };
 
@@ -53,7 +68,7 @@ function makeNewRow(row) {
   row.prepend(ul);
 }
 
-function renderBlocks() {
+function renderBlocks(moveDirection) {
   const { type, direction, top, left } = tempMovingItem;
   const previousTarget = document.querySelectorAll(`.${type}`);
   previousTarget.forEach((cell) => {
@@ -72,7 +87,8 @@ function renderBlocks() {
     } else {
       tempMovingItem = { ...movingItem };
       setTimeout(() => {
-        renderBlocks(), 0;
+        renderBlocks();
+        if (moveDirection === "top") console.log("stacked!"), 0; //check stacked
       });
     }
   });
@@ -85,30 +101,32 @@ function renderBlocks() {
 document.addEventListener("keydown", (event) => getKeyType(event));
 
 function getKeyType(event) {
-  switch (event.keyCode) {
-    case 39:
-      moveBlock("left", 1);
+  switch (event.key) {
+    case "ArrowRight":
+      moveBlocks("left", 1);
       break;
-    case 37:
-      moveBlock("left", -1);
-
+    case "ArrowLeft":
+      moveBlocks("left", -1);
       break;
-    case 38:
-      moveBlock("top", -1);
-      4;
-
+    case "ArrowDown":
+      moveBlocks("top", 1);
       break;
-    case 40:
-      moveBlock("top", 1);
+    case "z":
+      rotateBlocks();
       break;
-
     default:
       break;
   }
 }
-function moveBlock(moveDirection, amount) {
-  tempMovingItem[moveDirection] += amount;
+function rotateBlocks() {
+  tempMovingItem.direction === 3
+    ? (tempMovingItem.direction = 0)
+    : (tempMovingItem.direction += 1);
   renderBlocks();
+}
+function moveBlocks(moveDirection, amount) {
+  tempMovingItem[moveDirection] += amount;
+  renderBlocks(moveDirection);
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
