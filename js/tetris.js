@@ -1,47 +1,19 @@
 "use strict";
+
+import { BLOCKS } from "./block.js";
 //DOM
 const matrix = document.querySelector(".matrix ul");
-
 //variables
 let score = 0;
 let duration = 500;
 let downInterval;
 let tempMovingItem;
 
-const BLOCKS = {
-  tree: [
-    [
-      [2, 1],
-      [0, 1],
-      [1, 0],
-      [1, 1],
-    ],
-    [
-      [1, 0],
-      [1, 1],
-      [1, 2],
-      [2, 1],
-    ],
-    [
-      [0, 1],
-      [1, 1],
-      [2, 1],
-      [1, 2],
-    ],
-    [
-      [1, 0],
-      [1, 1],
-      [1, 2],
-      [0, 1],
-    ],
-  ],
-};
-
 const movingItem = {
-  type: "tree",
+  type: "blockS",
   direction: 0,
   top: 0,
-  left: 0,
+  left: 4,
 };
 //init
 
@@ -68,13 +40,17 @@ function makeNewRow(row) {
   row.prepend(ul);
 }
 
+function removePreBlocks(type) {
+  const previousTarget = document.querySelectorAll(".moving");
+  previousTarget.forEach((cell) => {
+    cell.classList.remove(type, "moving");
+  });
+}
+
 function renderBlocks(moveDirection = "", rotate = false) {
   const { type, direction, top, left } = tempMovingItem;
-  const previousTarget = document.querySelectorAll(`.${type}`);
-  previousTarget.forEach((cell) => {
-    cell.classList.remove(type);
-  });
 
+  removePreBlocks(type);
   BLOCKS[type][direction].some((cell) => {
     const x = cell[0] + left;
     const y = cell[1] + top;
@@ -82,16 +58,19 @@ function renderBlocks(moveDirection = "", rotate = false) {
     const target = matrix.childNodes[y]
       ? matrix.childNodes[y].childNodes[0].childNodes[x]
       : null;
-    if (target) {
-      target.classList.add(type);
+    if (checkEmpty(target)) {
+      target.classList.add(type, "moving");
     } else if (rotate === true) {
-      adjustSideRotate(x);
+      adjustSideRotate(x, y);
     } else {
       tempMovingItem = { ...movingItem };
       setTimeout(() => {
         renderBlocks();
-        if (moveDirection === "top") console.log("stacked!"), 0; //check stacked
-      });
+
+        if (moveDirection === "top") {
+          stackBlocks();
+        }
+      }, 0);
       return true;
     }
   });
@@ -99,11 +78,33 @@ function renderBlocks(moveDirection = "", rotate = false) {
   movingItem.top = top;
   movingItem.direction = direction;
 }
-function adjustSideRotate(x) {
+function stackBlocks() {
+  const blocksToStack = document.querySelectorAll(".moving");
+  blocksToStack.forEach((cell) => {
+    cell.classList.remove("moving");
+    cell.classList.add("stacked");
+  });
+  movingItem.left = 4;
+  movingItem.top = 0;
+  movingItem.direction = 0;
+  tempMovingItem = { ...movingItem };
+  renderBlocks();
+}
+function checkEmpty(target) {
+  if (!target || target.classList.contains("stacked")) {
+    return false;
+  } else {
+    return true;
+  }
+}
+function adjustSideRotate(x, y) {
   if (x < 0) {
     tempMovingItem.left += 1;
   } else {
     tempMovingItem.left -= 1;
+  }
+  if (y > matrix.childNodes.length - 1) {
+    tempMovingItem.top -= 1;
   }
   setTimeout(() => {
     renderBlocks(), 0;

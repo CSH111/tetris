@@ -29,6 +29,24 @@ body {
   width: 25px;
 }
 
-.tree {
-  background-color: aquamarine;
+.blockT {
+  background-color: rgb(255, 0, 0);
+}
+.blockO {
+  background-color: rgb(254, 246, 21);
+}
+.blockZ {
+  background-color: rgb(126, 64, 232);
+}
+.blockS {
+  background-color: rgb(62, 255, 252);
+}
+.blockJ {
+  background-color: rgb(210, 46, 255);
+}
+.blockL {
+  background-color: rgb(255, 40, 147);
+}
+.blockI {
+  background-color: rgb(255, 127, 127);
 }
