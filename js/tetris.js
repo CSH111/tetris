@@ -10,7 +10,7 @@ let downInterval;
 let tempMovingItem;
 
 const movingItem = {
-  type: "blockS",
+  type: `${makeRandomBlock()}`,
   direction: 0,
   top: 0,
   left: 4,
@@ -84,11 +84,19 @@ function stackBlocks() {
     cell.classList.remove("moving");
     cell.classList.add("stacked");
   });
+  createNewBlocks();
+}
+function createNewBlocks() {
   movingItem.left = 4;
   movingItem.top = 0;
   movingItem.direction = 0;
+  movingItem.type = `${makeRandomBlock()}`;
   tempMovingItem = { ...movingItem };
   renderBlocks();
+}
+function makeRandomBlock() {
+  const randomNumber = Math.floor(Math.random() * 7);
+  return Object.keys(BLOCKS)[randomNumber];
 }
 function checkEmpty(target) {
   if (!target || target.classList.contains("stacked")) {
@@ -143,3 +151,6 @@ function moveBlocks(moveDirection, amount) {
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
+
+console.log(Object.keys(BLOCKS));
+console.log(Math.floor(Math.random() * 7));
