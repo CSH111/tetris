@@ -68,14 +68,14 @@ function makeNewRow(row) {
   row.prepend(ul);
 }
 
-function renderBlocks(moveDirection) {
+function renderBlocks(moveDirection = "", rotate = false) {
   const { type, direction, top, left } = tempMovingItem;
   const previousTarget = document.querySelectorAll(`.${type}`);
   previousTarget.forEach((cell) => {
     cell.classList.remove(type);
   });
 
-  BLOCKS[type][direction].forEach((cell) => {
+  BLOCKS[type][direction].some((cell) => {
     const x = cell[0] + left;
     const y = cell[1] + top;
 
@@ -84,19 +84,31 @@ function renderBlocks(moveDirection) {
       : null;
     if (target) {
       target.classList.add(type);
+    } else if (rotate === true) {
+      adjustSideRotate(x);
     } else {
       tempMovingItem = { ...movingItem };
       setTimeout(() => {
         renderBlocks();
         if (moveDirection === "top") console.log("stacked!"), 0; //check stacked
       });
+      return true;
     }
   });
   movingItem.left = left;
   movingItem.top = top;
   movingItem.direction = direction;
 }
-
+function adjustSideRotate(x) {
+  if (x < 0) {
+    tempMovingItem.left += 1;
+  } else {
+    tempMovingItem.left -= 1;
+  }
+  setTimeout(() => {
+    renderBlocks(), 0;
+  });
+}
 // event
 document.addEventListener("keydown", (event) => getKeyType(event));
 
@@ -122,7 +134,7 @@ function rotateBlocks() {
   tempMovingItem.direction === 3
     ? (tempMovingItem.direction = 0)
     : (tempMovingItem.direction += 1);
-  renderBlocks();
+  renderBlocks("", true);
 }
 function moveBlocks(moveDirection, amount) {
   tempMovingItem[moveDirection] += amount;
