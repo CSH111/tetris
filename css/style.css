@@ -28,7 +28,13 @@ body {
   height: 25px;
   width: 25px;
 }
+.init {
+  margin-top: 30px;
+  font-size: 20px;
+  padding: 10px 15px;
+}
 
+/* BLOCKS */
 .blockT {
   background-color: rgb(255, 0, 0);
 }

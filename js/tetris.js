@@ -5,26 +5,28 @@ import { BLOCKS } from "./block.js";
 const matrix = document.querySelector(".matrix ul");
 //variables
 let score = 0;
-let duration = 500;
-let downInterval;
+let downInterval = 800;
 let tempMovingItem;
 
 const movingItem = {
-  type: `${makeRandomBlock()}`,
+  type: `${PickRandomBlock()}`,
   direction: 0,
   top: 0,
   left: 4,
 };
 //init
 
-init();
-//function
 function init() {
+  createMatrix();
+  const startBtn = document.querySelector(".init");
+  startBtn.addEventListener("click", startGame);
+}
+init();
+function startGame() {
   tempMovingItem = { ...movingItem };
-  prependRows();
   renderBlocks();
 }
-function prependRows() {
+function createMatrix() {
   for (let i = 0; i < 20; i++) {
     const row = document.createElement("li");
     makeNewRow(row);
@@ -84,20 +86,21 @@ function stackBlocks() {
     cell.classList.remove("moving");
     cell.classList.add("stacked");
   });
-  createNewBlocks();
+  generateNewBlock();
 }
-function createNewBlocks() {
+function generateNewBlock() {
   movingItem.left = 4;
   movingItem.top = 0;
   movingItem.direction = 0;
-  movingItem.type = `${makeRandomBlock()}`;
+  movingItem.type = `${PickRandomBlock()}`;
   tempMovingItem = { ...movingItem };
   renderBlocks();
 }
-function makeRandomBlock() {
-  const randomNumber = Math.floor(Math.random() * 7);
+function PickRandomBlock() {
+  const randomNumber = Math.floor(Math.random() * Object.keys(BLOCKS).length);
   return Object.keys(BLOCKS)[randomNumber];
 }
+console.log(Math.floor(Math.random() * Object.keys(BLOCKS).length));
 function checkEmpty(target) {
   if (!target || target.classList.contains("stacked")) {
     return false;
@@ -105,6 +108,16 @@ function checkEmpty(target) {
     return true;
   }
 }
+function autoDown(moveDirection) {
+  setInterval(() => {
+    moveDirection = "top";
+    tempMovingItem.top += 1;
+    renderBlocks(moveDirection);
+    // console.log("tempMovingItem.top: ", tempMovingItem.top);
+  }, downInterval);
+}
+autoDown();
+
 function adjustSideRotate(x, y) {
   if (x < 0) {
     tempMovingItem.left += 1;
@@ -151,6 +164,3 @@ function moveBlocks(moveDirection, amount) {
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
-
-console.log(Object.keys(BLOCKS));
-console.log(Math.floor(Math.random() * 7));
