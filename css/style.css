@@ -4,14 +4,15 @@
   list-style: none;
 }
 body {
-  height: 100%;
-  background-color: rgb(255, 255, 255);
+  height: 100vh;
   overflow: hidden;
 }
 .wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  background-color: transparent;
 }
 .score {
   font-size: 36px;
@@ -28,12 +29,25 @@ body {
   height: 25px;
   width: 25px;
 }
-.init {
+.start {
   margin-top: 30px;
   font-size: 20px;
   padding: 10px 15px;
 }
-
+.gameOver {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.764);
+  color: white;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.gameOver.show {
+  display: flex;
+}
 /* BLOCKS */
 .blockT {
   background-color: rgb(255, 0, 0);

@@ -5,28 +5,33 @@ import { BLOCKS } from "./block.js";
 const matrix = document.querySelector(".matrix ul");
 //variables
 let score = 0;
-let downInterval = 800;
+let blockDownInterval;
+let intervalTime = 800;
 let tempMovingItem;
+const rows = 20;
+const columns = 10;
 
-const movingItem = {
+const initialItemSet = {
   type: `${PickRandomBlock()}`,
-  type: "blockI",
   direction: 0,
   top: 0,
   left: 4,
 };
 
+let movingItem = { ...initialItemSet };
 //init
 init();
 
 //funtions
 function init() {
   createMatrix();
-  const startBtn = document.querySelector(".init");
+
+  const startBtn = document.querySelector(".start");
   startBtn.addEventListener("click", startGame);
 }
 
-function startGame() {
+function startGame(event) {
+  event.target.disabled = true;
   tempMovingItem = { ...movingItem };
   renderBlocks();
   autoDown();
@@ -34,7 +39,7 @@ function startGame() {
 }
 
 function createMatrix() {
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < rows; i++) {
     prependNewRow();
   }
 }
@@ -46,7 +51,7 @@ function prependNewRow() {
 
 function setNewRow(row) {
   const ul = document.createElement("ul");
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < columns; i++) {
     const column = document.createElement("li");
     ul.prepend(column);
   }
@@ -102,9 +107,46 @@ function stackBlocks() {
     cell.classList.add("stacked");
   });
   checkFullLines();
+  checkGameOver();
   generateNewBlock();
 }
+function checkGameOver() {
+  const lastLine = matrix.childNodes[0].firstChild.childNodes;
+  Array.from(lastLine).some((cell) => {
+    if (cell.classList.contains("stacked")) {
+      toggleGameOverDisplay();
+      stopGame();
+      setRestartBtn();
+      return true;
+    }
+  });
+}
+function setRestartBtn() {
+  const restartBtn = document.querySelector(".restart");
+  restartBtn.addEventListener("click", restart);
+}
 
+//restart
+function clearMatrix() {
+  matrix.childNodes.forEach((li) => {
+    li.firstChild.childNodes.forEach((cell) => {
+      cell.removeAttribute("class");
+    });
+  });
+}
+function restart() {
+  toggleGameOverDisplay();
+  clearMatrix();
+  // init();
+}
+function toggleGameOverDisplay() {
+  const gameOver = document.querySelector(".gameOver");
+  gameOver.classList.toggle("show");
+}
+function stopGame() {
+  document.removeEventListener("keydown", onKeydown);
+  clearInterval(blockDownInterval);
+}
 function checkFullLines() {
   matrix.childNodes.forEach((row) => {
     let isFull = true;
@@ -123,13 +165,9 @@ function removeFullLines(row) {
   row.remove();
   prependNewRow();
 }
-console.dir(matrix.childNodes[0].firstChild.childNodes);
 function generateNewBlock() {
-  movingItem.left = 4;
-  movingItem.top = 0;
-  movingItem.direction = 0;
+  movingItem = { ...initialItemSet };
   movingItem.type = `${PickRandomBlock()}`;
-  tempMovingItem = { ...movingItem };
   renderBlocks();
 }
 
@@ -139,16 +177,15 @@ function PickRandomBlock() {
 }
 
 function autoDown() {
-  setInterval(() => {
+  blockDownInterval = setInterval(() => {
     tempMovingItem.top += 1;
     renderBlocks("top");
-    // console.log("tempMovingItem.top: ", tempMovingItem.top);
-  }, downInterval);
+  }, intervalTime);
 }
 
 // event
 function setKeydownEvent() {
-  document.addEventListener("keydown", (event) => onKeydown(event));
+  document.addEventListener("keydown", onKeydown);
 }
 function onKeydown(event) {
   switch (event.keyCode) {
