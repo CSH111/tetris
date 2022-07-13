@@ -35,13 +35,16 @@ function startGame() {
 
 function createMatrix() {
   for (let i = 0; i < 20; i++) {
-    const row = document.createElement("li");
-    makeNewRow(row);
-    matrix.prepend(row);
+    prependNewRow();
   }
 }
+function prependNewRow() {
+  const row = document.createElement("li");
+  setNewRow(row);
+  matrix.prepend(row);
+}
 
-function makeNewRow(row) {
+function setNewRow(row) {
   const ul = document.createElement("ul");
   for (let i = 0; i < 10; i++) {
     const column = document.createElement("li");
@@ -98,9 +101,29 @@ function stackBlocks() {
     cell.classList.remove("moving");
     cell.classList.add("stacked");
   });
+  checkFullLines();
   generateNewBlock();
 }
 
+function checkFullLines() {
+  matrix.childNodes.forEach((row) => {
+    let isFull = true;
+    const cellsArr = Array.from(row.firstChild.childNodes);
+    cellsArr.some((cell) => {
+      if (!cell.classList.contains("stacked")) {
+        return (isFull = false);
+      }
+    });
+    if (isFull) {
+      removeFullLines(row);
+    }
+  });
+}
+function removeFullLines(row) {
+  row.remove();
+  prependNewRow();
+}
+console.dir(matrix.childNodes[0].firstChild.childNodes);
 function generateNewBlock() {
   movingItem.left = 4;
   movingItem.top = 0;
@@ -208,7 +231,6 @@ function adjustRotate(target, x, y) {
   // adjustRotate(target, x, y);
   // return adjustRotate(target, x, y);
 }
-
 function addAdjustStack(error) {
   if (!adjustStack.includes(error)) {
     adjustStack.push(error);
