@@ -10,22 +10,29 @@ let tempMovingItem;
 
 const movingItem = {
   type: `${PickRandomBlock()}`,
+  type: "blockI",
   direction: 0,
   top: 0,
   left: 4,
 };
-//init
 
+//init
+init();
+
+//funtions
 function init() {
   createMatrix();
   const startBtn = document.querySelector(".init");
   startBtn.addEventListener("click", startGame);
 }
-init();
+
 function startGame() {
   tempMovingItem = { ...movingItem };
   renderBlocks();
+  autoDown();
+  setKeydownEvent();
 }
+
 function createMatrix() {
   for (let i = 0; i < 20; i++) {
     const row = document.createElement("li");
@@ -33,6 +40,7 @@ function createMatrix() {
     matrix.prepend(row);
   }
 }
+
 function makeNewRow(row) {
   const ul = document.createElement("ul");
   for (let i = 0; i < 10; i++) {
@@ -48,8 +56,7 @@ function removePreBlocks(type) {
     cell.classList.remove(type, "moving");
   });
 }
-
-function renderBlocks(moveDirection = "", rotate = false) {
+function renderBlocks(moveDirection = "", rotate = "") {
   const { type, direction, top, left } = tempMovingItem;
 
   removePreBlocks(type);
@@ -60,15 +67,12 @@ function renderBlocks(moveDirection = "", rotate = false) {
     const target = matrix.childNodes[y]
       ? matrix.childNodes[y].childNodes[0].childNodes[x]
       : null;
-    if (checkEmpty(target)) {
+    if (checkEmpty(target) === true) {
       target.classList.add(type, "moving");
-    } else if (rotate === true) {
-      adjustSideRotate(x, y);
     } else {
       tempMovingItem = { ...movingItem };
       setTimeout(() => {
         renderBlocks();
-
         if (moveDirection === "top") {
           stackBlocks();
         }
@@ -80,6 +84,14 @@ function renderBlocks(moveDirection = "", rotate = false) {
   movingItem.top = top;
   movingItem.direction = direction;
 }
+
+function checkEmpty(target) {
+  if (!target || target.classList.contains("stacked")) {
+    return false;
+  }
+  return true;
+}
+
 function stackBlocks() {
   const blocksToStack = document.querySelectorAll(".moving");
   blocksToStack.forEach((cell) => {
@@ -88,6 +100,7 @@ function stackBlocks() {
   });
   generateNewBlock();
 }
+
 function generateNewBlock() {
   movingItem.left = 4;
   movingItem.top = 0;
@@ -96,71 +109,128 @@ function generateNewBlock() {
   tempMovingItem = { ...movingItem };
   renderBlocks();
 }
+
 function PickRandomBlock() {
   const randomNumber = Math.floor(Math.random() * Object.keys(BLOCKS).length);
   return Object.keys(BLOCKS)[randomNumber];
 }
-console.log(Math.floor(Math.random() * Object.keys(BLOCKS).length));
-function checkEmpty(target) {
-  if (!target || target.classList.contains("stacked")) {
-    return false;
-  } else {
-    return true;
-  }
-}
-function autoDown(moveDirection) {
+
+function autoDown() {
   setInterval(() => {
-    moveDirection = "top";
     tempMovingItem.top += 1;
-    renderBlocks(moveDirection);
+    renderBlocks("top");
     // console.log("tempMovingItem.top: ", tempMovingItem.top);
   }, downInterval);
 }
-autoDown();
 
-function adjustSideRotate(x, y) {
-  if (x < 0) {
-    tempMovingItem.left += 1;
-  } else {
-    tempMovingItem.left -= 1;
-  }
-  if (y > matrix.childNodes.length - 1) {
-    tempMovingItem.top -= 1;
-  }
-  setTimeout(() => {
-    renderBlocks(), 0;
-  });
-}
 // event
-document.addEventListener("keydown", (event) => getKeyType(event));
-
-function getKeyType(event) {
-  switch (event.key) {
-    case "ArrowRight":
+function setKeydownEvent() {
+  document.addEventListener("keydown", (event) => onKeydown(event));
+}
+function onKeydown(event) {
+  switch (event.keyCode) {
+    case 39: // ArrowRight
       moveBlocks("left", 1);
       break;
-    case "ArrowLeft":
+    case 37: // ArrowLeft
       moveBlocks("left", -1);
       break;
-    case "ArrowDown":
+    case 40: // ArrowDown
       moveBlocks("top", 1);
       break;
-    case "z":
+    case 38: // ArrowUp
+    case 90: // z
       rotateBlocks();
+      break;
+    case 32: // space
       break;
     default:
       break;
   }
 }
+
 function rotateBlocks() {
   tempMovingItem.direction === 3
     ? (tempMovingItem.direction = 0)
     : (tempMovingItem.direction += 1);
+
   renderBlocks("", true);
 }
+
 function moveBlocks(moveDirection, amount) {
   tempMovingItem[moveDirection] += amount;
   renderBlocks(moveDirection);
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
+
+// rotate시 클래스를 stack, moving 두가지 갖고 있는 요소 좌표찾기
+// (형제요소 중 몇번 쨰인지=>x좌표(구글 검색:js 몇 번째 자식))
+
+//moving의 좌표와 stack+moving의 좌표를 비교 해서 좌로 뺼지 우로 뺄지 결정
+//좌표비교 변경전 x좌표의합 vs 변경후 x좌표의 합
+
+//rotate 후 겹치면 ->
+// 겹친놈의 x좌표 보다 큰 갯수 작은 갯수 비교 후 좌, 우 결정
+
+//rotate 예외 처리 - 구현ing...
+function adjustRotate(target, x, y) {
+  switch (checkEmpty(target)) {
+    case "outOfMatrix":
+      console.log("out");
+      if (x < 0) {
+        tempMovingItem.left += 1;
+      } else if (x > 9) {
+        tempMovingItem.left -= 1;
+      } else if (y > 19) {
+        tempMovingItem.top -= 1;
+      }
+
+      addAdjustStack("outOfMatrix");
+      restoreBlockDirection();
+      break;
+    case "alredyCharged":
+      const overlappedBlocks = document.querySelectorAll(".moving.stacked");
+
+      console.log(getXIndex(target));
+
+      console.log("charged");
+      // tempMovingItem.left -= 1;
+
+      //
+      addAdjustStack("charged");
+      restoreBlockDirection();
+      break;
+  }
+  setTimeout(() => {
+    renderBlocks("", true);
+  }, 0);
+  // adjustRotate(target, x, y);
+  // return adjustRotate(target, x, y);
+}
+
+function addAdjustStack(error) {
+  if (!adjustStack.includes(error)) {
+    adjustStack.push(error);
+  }
+}
+function restoreBlockDirection() {
+  if (adjustStack.length === 2) {
+    adjustStack.splice(0);
+
+    if (tempMovingItem.direction === 0) {
+      tempMovingItem.direction = 3;
+      return;
+    }
+    tempMovingItem.direction -= 1;
+  }
+}
+function getXIndex(element) {
+  let i = 0;
+  while (element.previousElementSibling != null) {
+    element = element.previousElementSibling;
+    i++;
+  }
+  console.log(i);
+  return i;
+}
