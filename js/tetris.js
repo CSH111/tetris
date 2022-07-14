@@ -7,8 +7,9 @@ const matrix = document.querySelector(".matrix ul");
 let score = 0;
 let blockDownInterval;
 let intervalTime = 800;
+let movingItem;
 let tempMovingItem;
-const rows = 20;
+const rows = 22;
 const columns = 10;
 
 const initialItemSet = {
@@ -18,24 +19,29 @@ const initialItemSet = {
   left: 4,
 };
 
-let movingItem = { ...initialItemSet };
 //init
-init();
 
+init();
+setInitialPosition();
 //funtions
+function setInitialPosition() {
+  movingItem = { ...initialItemSet };
+}
+
 function init() {
   createMatrix();
 
   const startBtn = document.querySelector(".start");
   startBtn.addEventListener("click", startGame);
 }
-
 function startGame(event) {
-  event.target.disabled = true;
   tempMovingItem = { ...movingItem };
   renderBlocks();
   autoDown();
   setKeydownEvent();
+  if (event) {
+    event.target.disabled = true;
+  }
 }
 
 function createMatrix() {
@@ -106,12 +112,16 @@ function stackBlocks() {
     cell.classList.remove("moving");
     cell.classList.add("stacked");
   });
+  // setTimeout(() => generateNewBlock(), 0);
+  // setTimeout(() => {
+  //   checkFullLines();
+  // }, 0);
+  generateNewBlock();
   checkFullLines();
   checkGameOver();
-  generateNewBlock();
 }
 function checkGameOver() {
-  const lastLine = matrix.childNodes[0].firstChild.childNodes;
+  const lastLine = matrix.childNodes[2].firstChild.childNodes;
   Array.from(lastLine).some((cell) => {
     if (cell.classList.contains("stacked")) {
       toggleGameOverDisplay();
@@ -127,17 +137,13 @@ function setRestartBtn() {
 }
 
 //restart
-function clearMatrix() {
-  matrix.childNodes.forEach((li) => {
-    li.firstChild.childNodes.forEach((cell) => {
-      cell.removeAttribute("class");
-    });
-  });
-}
+
 function restart() {
   toggleGameOverDisplay();
-  clearMatrix();
-  // init();
+  // clearMatrix();
+  matrix.innerHTML = "";
+  init();
+  startGame();
 }
 function toggleGameOverDisplay() {
   const gameOver = document.querySelector(".gameOver");
@@ -149,14 +155,9 @@ function stopGame() {
 }
 function checkFullLines() {
   matrix.childNodes.forEach((row) => {
-    let isFull = true;
     const cellsArr = Array.from(row.firstChild.childNodes);
-    cellsArr.some((cell) => {
-      if (!cell.classList.contains("stacked")) {
-        return (isFull = false);
-      }
-    });
-    if (isFull) {
+    if (cellsArr.every((cell) => cell.classList.contains("stacked"))) {
+      console.log(row);
       removeFullLines(row);
     }
   });
@@ -166,7 +167,7 @@ function removeFullLines(row) {
   prependNewRow();
 }
 function generateNewBlock() {
-  movingItem = { ...initialItemSet };
+  setInitialPosition();
   movingItem.type = `${PickRandomBlock()}`;
   renderBlocks();
 }
@@ -293,3 +294,5 @@ function getXIndex(element) {
   console.log(i);
   return i;
 }
+
+//라인 클리어 시 줄 밀리는 과정에서 stacked 클래스 잃는듯..

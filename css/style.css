@@ -19,7 +19,7 @@ body {
   margin-bottom: 2rem;
 }
 .matrix > ul {
-  border: solid 2px black;
+  /* border: solid 2px black; */
 }
 .matrix > ul > li > ul {
   display: flex;
@@ -29,11 +29,17 @@ body {
   height: 25px;
   width: 25px;
 }
+.matrix > ul > li:first-child > ul > li,
+.matrix > ul > li:nth-child(2) > ul > li {
+  /* background-color: black; */
+  outline: none;
+}
 .start {
   margin-top: 30px;
   font-size: 20px;
   padding: 10px 15px;
 }
+
 .gameOver {
   position: absolute;
   width: 100%;
