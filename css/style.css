@@ -18,8 +18,8 @@ body {
   font-size: 36px;
   margin-bottom: 2rem;
 }
-.matrix > ul {
-  /* border: solid 2px black; */
+.matrix {
+  position: relative;
 }
 .matrix > ul > li > ul {
   display: flex;
@@ -34,7 +34,17 @@ body {
   /* background-color: black; */
   outline: none;
 }
-.start {
+.matrix .startAlertBox {
+  font-size: 30px;
+  font-weight: bold;
+  color: blueviolet;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.startBtn {
   margin-top: 30px;
   font-size: 20px;
   padding: 10px 15px;

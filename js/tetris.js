@@ -3,6 +3,7 @@
 import { BLOCKS } from "./block.js";
 //DOM
 const matrix = document.querySelector(".matrix ul");
+const scoreBox = document.querySelectorAll(".score");
 //variables
 let score = 0;
 let blockDownInterval;
@@ -20,7 +21,7 @@ const initialItemSet = {
 };
 
 //init
-
+scoreBox.innerHTML = "rr";
 init();
 setInitialPosition();
 // startGame();
@@ -28,11 +29,12 @@ setInitialPosition();
 function setInitialPosition() {
   movingItem = { ...initialItemSet };
 }
-
+function setInitialScore() {}
 function init() {
   createMatrix();
-  const startBtn = document.querySelector(".start");
-  startBtn.addEventListener("click", startGame);
+  setInitialScore();
+  const startBtn = document.querySelector(".startBtn");
+  startBtn.addEventListener("click", alertStart);
 }
 function startGame(event) {
   tempMovingItem = { ...movingItem };
@@ -170,6 +172,7 @@ function restart() {
 function toggleGameOverDisplay() {
   const gameOver = document.querySelector(".gameOver");
   gameOver.classList.toggle("show");
+  gameOver;
 }
 function stopGame() {
   document.removeEventListener("keydown", onKeydown);
@@ -184,10 +187,8 @@ function checkFullLines() {
   });
 }
 function increaseScore() {
-  const scoreBox = document.querySelector(".score");
-
   score += 10;
-  scoreBox.innerHTML = score;
+  scoreBox.forEach((box) => (box.innerHTML = score));
 }
 
 function removeFullLines(row) {
@@ -250,6 +251,21 @@ function rotateBlocks() {
 function moveBlocks(moveDirection, amount) {
   tempMovingItem[moveDirection] += amount;
   renderBlocks(moveDirection);
+}
+
+function alertStart() {
+  const startAlertBox = document.querySelector(".startAlertBox");
+  startAlertBox.innerHTML = "READY";
+  setTimeout(() => {
+    startAlertBox.innerHTML = "GO!";
+    removeAlertBox(startAlertBox);
+  }, 1000);
+}
+function removeAlertBox(startAlertBox) {
+  setTimeout(() => {
+    startAlertBox.remove();
+    startGame();
+  }, 500);
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
