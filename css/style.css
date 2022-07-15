@@ -76,3 +76,7 @@ body {
 .blockI {
   background-color: rgb(255, 127, 127);
 }
+
+.preview {
+  background-color: rgba(0, 0, 0, 0.374);
+}

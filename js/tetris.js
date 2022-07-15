@@ -23,6 +23,7 @@ const initialItemSet = {
 
 init();
 setInitialPosition();
+// startGame();
 //funtions
 function setInitialPosition() {
   movingItem = { ...initialItemSet };
@@ -30,7 +31,6 @@ function setInitialPosition() {
 
 function init() {
   createMatrix();
-
   const startBtn = document.querySelector(".start");
   startBtn.addEventListener("click", startGame);
 }
@@ -43,7 +43,6 @@ function startGame(event) {
     event.target.disabled = true;
   }
 }
-
 function createMatrix() {
   for (let i = 0; i < rows; i++) {
     prependNewRow();
@@ -70,9 +69,17 @@ function removePreBlocks(type) {
     cell.classList.remove(type, "moving");
   });
 }
+
+function removePrePreview() {
+  const previousTarget = document.querySelectorAll(".preview");
+  previousTarget.forEach((cell) => {
+    cell.classList.remove("preview");
+  });
+}
+
 function renderBlocks(moveDirection = "", rotate = "") {
   const { type, direction, top, left } = tempMovingItem;
-
+  removePrePreview();
   removePreBlocks(type);
   BLOCKS[type][direction].some((cell) => {
     const x = cell[0] + left;
@@ -83,20 +90,35 @@ function renderBlocks(moveDirection = "", rotate = "") {
       : null;
     if (checkEmpty(target) === true) {
       target.classList.add(type, "moving");
+      // preview
+
+      // let preview = matrix.childNodes[cell[1] + 20].childNodes[0].childNodes[x];
+      // preview.classList.add("preview");
+      // checkPreview(0);
+      // //
     } else {
-      tempMovingItem = { ...movingItem };
-      setTimeout(() => {
-        renderBlocks();
-        if (moveDirection === "top") {
-          stackBlocks();
-        }
-      }, 0);
+      preventRendering(moveDirection);
       return true;
     }
+
+    // if (matrix.childNodes[y + 1]) console.log("잇");
+    // while문으로 맨아래까지 내린다.
   });
   movingItem.left = left;
   movingItem.top = top;
   movingItem.direction = direction;
+}
+function checkPreview() {
+  return 0;
+}
+function preventRendering(moveDirection) {
+  tempMovingItem = { ...movingItem };
+  setTimeout(() => {
+    renderBlocks();
+    if (moveDirection === "top") {
+      stackBlocks();
+    }
+  }, 0);
 }
 
 function checkEmpty(target) {
@@ -157,14 +179,21 @@ function checkFullLines() {
   matrix.childNodes.forEach((row) => {
     const cellsArr = Array.from(row.firstChild.childNodes);
     if (cellsArr.every((cell) => cell.classList.contains("stacked"))) {
-      console.log(row);
       removeFullLines(row);
     }
   });
 }
+function increaseScore() {
+  const scoreBox = document.querySelector(".score");
+
+  score += 10;
+  scoreBox.innerHTML = score;
+}
+
 function removeFullLines(row) {
   row.remove();
   prependNewRow();
+  increaseScore();
 }
 function generateNewBlock() {
   setInitialPosition();
@@ -295,4 +324,17 @@ function getXIndex(element) {
   return i;
 }
 
-//라인 클리어 시 줄 밀리는 과정에서 stacked 클래스 잃는듯..
+//할거
+//
+//- 게임기능
+// 1. 점수
+// 2. 한번에 내리기
+// 3. 내릴 장소 인디케이트(shoot preview)
+// 4. 자유로운 rotate 구현
+//
+//- UI
+// 1.가이드
+//
+//- 부가기능
+// 1. 랭킹
+// 2. 캡쳐 및 공유
