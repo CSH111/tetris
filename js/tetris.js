@@ -4,10 +4,11 @@ import { BLOCKS } from "./block.js";
 //DOM
 const matrix = document.querySelector(".matrix ul");
 const scoreBox = document.querySelector(".score");
+const startBtn = document.querySelector(".startBtn");
 //variables
 let score = 0;
 let blockDownInterval;
-let intervalTime = 800;
+// let intervalTime = 800;
 let movingItem;
 let tempMovingItem;
 const rows = 22;
@@ -35,15 +36,15 @@ function init() {
   setInitialScore();
   setInitialPosition();
 
-  const startBtn = document.querySelector(".startBtn");
   startBtn.addEventListener("click", alertStart);
 }
 
 function generateNewBlock() {
+  clearInterval(blockDownInterval);
   if (matrix.childNodes[1].innerHTML.includes("stacked")) {
     return;
   }
-
+  autoDown(800);
   setInitialPosition();
   movingItem.type = `${PickRandomBlock()}`;
   renderBlocks();
@@ -52,7 +53,7 @@ function startGame(event) {
   tempMovingItem = { ...movingItem };
   // generateNewBlock();
   renderBlocks();
-  autoDown();
+  autoDown(800);
   setKeydownEvent();
   if (event) {
     event.target.disabled = true;
@@ -133,10 +134,11 @@ function stackBlocks() {
   // setTimeout(() => {
   //   checkFullLines();
   // }, 0);
-
+  // clearInterval(blockDownInterval);
+  // autoDown(800);
+  generateNewBlock();
   checkFullLines();
   checkGameOver();
-  generateNewBlock();
 }
 function checkGameOver() {
   const lastLine = matrix.childNodes[2].firstChild.childNodes;
@@ -197,10 +199,9 @@ function PickRandomBlock() {
   return Object.keys(BLOCKS)[randomNumber];
 }
 
-function autoDown() {
+function autoDown(intervalTime) {
   blockDownInterval = setInterval(() => {
-    tempMovingItem.top += 1;
-    renderBlocks("top");
+    moveBlocks("top", 1);
   }, intervalTime);
 }
 
@@ -224,10 +225,17 @@ function onKeydown(event) {
       rotateBlocks();
       break;
     case 32: // space
+      quickDown();
+
       break;
     default:
       break;
   }
+}
+function quickDown() {
+  clearInterval(blockDownInterval);
+
+  autoDown(5);
 }
 
 function rotateBlocks() {
@@ -245,6 +253,7 @@ function moveBlocks(moveDirection, amount) {
 
 function alertStart() {
   const startAlertBox = document.querySelector(".startAlertBox");
+  startBtn.disabled = true;
   startAlertBox.innerHTML = "READY";
   startAlertBox.classList.add("show");
   setTimeout(() => {
