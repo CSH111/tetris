@@ -3,7 +3,7 @@
 import { BLOCKS } from "./block.js";
 //DOM
 const matrix = document.querySelector(".matrix ul");
-const scoreBox = document.querySelectorAll(".score");
+const scoreBox = document.querySelector(".score");
 //variables
 let score = 0;
 let blockDownInterval;
@@ -21,23 +21,36 @@ const initialItemSet = {
 };
 
 //init
-scoreBox.innerHTML = "rr";
 init();
-setInitialPosition();
-// startGame();
+
 //funtions
 function setInitialPosition() {
   movingItem = { ...initialItemSet };
 }
-function setInitialScore() {}
+function setInitialScore() {
+  scoreBox.innerHTML = 0;
+}
 function init() {
   createMatrix();
   setInitialScore();
+  setInitialPosition();
+
   const startBtn = document.querySelector(".startBtn");
   startBtn.addEventListener("click", alertStart);
 }
+
+function generateNewBlock() {
+  if (matrix.childNodes[1].innerHTML.includes("stacked")) {
+    return;
+  }
+
+  setInitialPosition();
+  movingItem.type = `${PickRandomBlock()}`;
+  renderBlocks();
+}
 function startGame(event) {
   tempMovingItem = { ...movingItem };
+  // generateNewBlock();
   renderBlocks();
   autoDown();
   setKeydownEvent();
@@ -72,16 +85,8 @@ function removePreBlocks(type) {
   });
 }
 
-function removePrePreview() {
-  const previousTarget = document.querySelectorAll(".preview");
-  previousTarget.forEach((cell) => {
-    cell.classList.remove("preview");
-  });
-}
-
 function renderBlocks(moveDirection = "", rotate = "") {
   const { type, direction, top, left } = tempMovingItem;
-  removePrePreview();
   removePreBlocks(type);
   BLOCKS[type][direction].some((cell) => {
     const x = cell[0] + left;
@@ -92,26 +97,14 @@ function renderBlocks(moveDirection = "", rotate = "") {
       : null;
     if (checkEmpty(target) === true) {
       target.classList.add(type, "moving");
-      // preview
-
-      // let preview = matrix.childNodes[cell[1] + 20].childNodes[0].childNodes[x];
-      // preview.classList.add("preview");
-      // checkPreview(0);
-      // //
     } else {
       preventRendering(moveDirection);
       return true;
     }
-
-    // if (matrix.childNodes[y + 1]) console.log("잇");
-    // while문으로 맨아래까지 내린다.
   });
   movingItem.left = left;
   movingItem.top = top;
   movingItem.direction = direction;
-}
-function checkPreview() {
-  return 0;
 }
 function preventRendering(moveDirection) {
   tempMovingItem = { ...movingItem };
@@ -140,9 +133,10 @@ function stackBlocks() {
   // setTimeout(() => {
   //   checkFullLines();
   // }, 0);
-  generateNewBlock();
+
   checkFullLines();
   checkGameOver();
+  generateNewBlock();
 }
 function checkGameOver() {
   const lastLine = matrix.childNodes[2].firstChild.childNodes;
@@ -167,7 +161,7 @@ function restart() {
   // clearMatrix();
   matrix.innerHTML = "";
   init();
-  startGame();
+  alertStart();
 }
 function toggleGameOverDisplay() {
   const gameOver = document.querySelector(".gameOver");
@@ -187,19 +181,15 @@ function checkFullLines() {
   });
 }
 function increaseScore() {
+  const endScoreBox = document.querySelector(".endScore");
   score += 10;
-  scoreBox.forEach((box) => (box.innerHTML = score));
+  [scoreBox, endScoreBox].map((box) => (box.innerHTML = score));
 }
 
 function removeFullLines(row) {
   row.remove();
   prependNewRow();
   increaseScore();
-}
-function generateNewBlock() {
-  setInitialPosition();
-  movingItem.type = `${PickRandomBlock()}`;
-  renderBlocks();
 }
 
 function PickRandomBlock() {
@@ -256,6 +246,7 @@ function moveBlocks(moveDirection, amount) {
 function alertStart() {
   const startAlertBox = document.querySelector(".startAlertBox");
   startAlertBox.innerHTML = "READY";
+  startAlertBox.classList.add("show");
   setTimeout(() => {
     startAlertBox.innerHTML = "GO!";
     removeAlertBox(startAlertBox);
@@ -263,7 +254,7 @@ function alertStart() {
 }
 function removeAlertBox(startAlertBox) {
   setTimeout(() => {
-    startAlertBox.remove();
+    startAlertBox.classList.remove("show");
     startGame();
   }, 500);
 }
@@ -354,3 +345,7 @@ function getXIndex(element) {
 //- 부가기능
 // 1. 랭킹
 // 2. 캡쳐 및 공유
+
+//생성 혹은 이동에 디바운싱 넣어야 할듯?
+//인트로
+//모달 가이드

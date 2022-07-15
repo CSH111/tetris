@@ -42,8 +42,11 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  display: none;
 }
-
+.matrix .startAlertBox.show {
+  display: initial;
+}
 .startBtn {
   margin-top: 30px;
   font-size: 20px;
