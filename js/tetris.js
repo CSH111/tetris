@@ -13,6 +13,7 @@ let milSec;
 let sec;
 let score = 0;
 let blockDownInterval;
+let gameTimeInterval;
 let movingItem;
 let tempMovingItem;
 const rows = 22;
@@ -180,6 +181,7 @@ function toggleGameOverDisplay() {
 function stopGame() {
   document.removeEventListener("keydown", onKeydown);
   clearInterval(blockDownInterval);
+  clearInterval(gameTimeInterval);
 }
 function checkFullLines() {
   matrix.childNodes.forEach((row) => {
@@ -281,7 +283,7 @@ function setGameTimer() {
   secDOM.innerHTML = sec;
 }
 function runGameTimer() {
-  const gameTimeInterval = setInterval(() => {
+  gameTimeInterval = setInterval(() => {
     milSec--;
     if (milSec < 0) {
       sec--;
@@ -292,7 +294,7 @@ function runGameTimer() {
       clearInterval(gameTimeInterval);
     }
     milSecDOM.innerHTML = padZero(milSec);
-    secDOM.innerHTML = sec;
+    secDOM.innerHTML = padZero(sec);
   }, 10);
 }
 function padZero(number) {
@@ -377,9 +379,9 @@ function getXIndex(element) {
 // 1. 점수
 // 3. 내릴 장소 인디케이트(shoot preview)
 // 4. 자유로운 rotate 구현
-//5. 시간제한
 //6. 블록 올라오기
 //7. 클리어시 5초 추가
+//8. 제한시간 5초 미만 시 표시해주기
 //
 //- UI
 // 1.가이드
