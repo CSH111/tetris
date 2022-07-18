@@ -5,10 +5,14 @@ import { BLOCKS } from "./block.js";
 const matrix = document.querySelector(".matrix ul");
 const scoreBox = document.querySelector(".score");
 const startBtn = document.querySelector(".startBtn");
+const milSecDOM = document.querySelector(".milSec");
+const secDOM = document.querySelector(".sec");
+
 //variables
+let milSec;
+let sec;
 let score = 0;
 let blockDownInterval;
-// let intervalTime = 800;
 let movingItem;
 let tempMovingItem;
 const rows = 22;
@@ -28,13 +32,12 @@ init();
 function setInitialPosition() {
   movingItem = { ...initialItemSet };
 }
-function setInitialScore() {
-  scoreBox.innerHTML = 0;
-}
+
 function init() {
   createMatrix();
-  setInitialScore();
+  setGameTimer();
   setInitialPosition();
+  scoreBox.innerHTML = score;
 
   startBtn.addEventListener("click", alertStart);
 }
@@ -44,7 +47,7 @@ function generateNewBlock() {
   if (matrix.childNodes[1].innerHTML.includes("stacked")) {
     return;
   }
-  autoDown(800);
+  autoDown(500);
   setInitialPosition();
   movingItem.type = `${PickRandomBlock()}`;
   renderBlocks();
@@ -55,6 +58,7 @@ function startGame(event) {
   renderBlocks();
   autoDown(800);
   setKeydownEvent();
+  runGameTimer();
   if (event) {
     event.target.disabled = true;
   }
@@ -144,12 +148,15 @@ function checkGameOver() {
   const lastLine = matrix.childNodes[2].firstChild.childNodes;
   Array.from(lastLine).some((cell) => {
     if (cell.classList.contains("stacked")) {
-      toggleGameOverDisplay();
-      stopGame();
-      setRestartBtn();
+      gameOver();
       return true;
     }
   });
+}
+function gameOver() {
+  toggleGameOverDisplay();
+  stopGame();
+  setRestartBtn();
 }
 function setRestartBtn() {
   const restartBtn = document.querySelector(".restart");
@@ -234,7 +241,6 @@ function onKeydown(event) {
 }
 function quickDown() {
   clearInterval(blockDownInterval);
-
   autoDown(5);
 }
 
@@ -266,6 +272,31 @@ function removeAlertBox(startAlertBox) {
     startAlertBox.classList.remove("show");
     startGame();
   }, 500);
+}
+
+function setGameTimer() {
+  sec = 15;
+  milSec = 0;
+  milSecDOM.innerHTML = padZero(milSec);
+  secDOM.innerHTML = sec;
+}
+function runGameTimer() {
+  const gameTimeInterval = setInterval(() => {
+    milSec--;
+    if (milSec < 0) {
+      sec--;
+      milSec = 99;
+    }
+    if (milSec === 0 && sec === 0) {
+      gameOver();
+      clearInterval(gameTimeInterval);
+    }
+    milSecDOM.innerHTML = padZero(milSec);
+    secDOM.innerHTML = sec;
+  }, 10);
+}
+function padZero(number) {
+  return String(number).padStart(2, "0");
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
@@ -344,12 +375,15 @@ function getXIndex(element) {
 //
 //- 게임기능
 // 1. 점수
-// 2. 한번에 내리기
 // 3. 내릴 장소 인디케이트(shoot preview)
 // 4. 자유로운 rotate 구현
+//5. 시간제한
+//6. 블록 올라오기
+//7. 클리어시 5초 추가
 //
 //- UI
 // 1.가이드
+// 2. 하루동안 안보기
 //
 //- 부가기능
 // 1. 랭킹

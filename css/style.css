@@ -18,6 +18,9 @@ body {
   font-size: 36px;
   margin-bottom: 2rem;
 }
+.sec {
+  font-size: 25px;
+}
 .matrix {
   position: relative;
 }
