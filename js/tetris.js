@@ -5,8 +5,7 @@ import { BLOCKS } from "./block.js";
 const matrix = document.querySelector(".matrix ul");
 const scoreBox = document.querySelector(".score");
 const startBtn = document.querySelector(".startBtn");
-const milSecDOM = document.querySelector(".milSec");
-const secDOM = document.querySelector(".sec");
+const gameTimer = document.querySelector(".gameTimer");
 
 //variables
 let milSec;
@@ -194,7 +193,7 @@ function checkFullLines() {
 function increaseScore() {
   const endScoreBox = document.querySelector(".endScore");
   score += 10;
-  [scoreBox, endScoreBox].map((box) => (box.innerHTML = score));
+  [scoreBox, endScoreBox].forEach((box) => (box.innerHTML = score));
 }
 
 function removeFullLines(row) {
@@ -277,10 +276,10 @@ function removeAlertBox(startAlertBox) {
 }
 
 function setGameTimer() {
-  sec = 15;
+  sec = 10;
   milSec = 0;
-  milSecDOM.innerHTML = padZero(milSec);
-  secDOM.innerHTML = sec;
+  gameTimer.lastElementChild.innerHTML = padZero(milSec);
+  gameTimer.firstElementChild.innerHTML = sec;
 }
 function runGameTimer() {
   gameTimeInterval = setInterval(() => {
@@ -293,8 +292,11 @@ function runGameTimer() {
       gameOver();
       clearInterval(gameTimeInterval);
     }
-    milSecDOM.innerHTML = padZero(milSec);
-    secDOM.innerHTML = padZero(sec);
+    if (sec < 5 && !gameTimer.classList.contains("warning")) {
+      gameTimer.classList.add("warning");
+    }
+    gameTimer.lastElementChild.innerHTML = padZero(milSec);
+    gameTimer.firstElementChild.innerHTML = padZero(sec);
   }, 10);
 }
 function padZero(number) {

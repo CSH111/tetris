@@ -12,14 +12,17 @@
   align-items: center;
   height: 100%;
   background-color: transparent;
-  .score {
-    font-size: 36px;
-    margin-bottom: 2rem;
+}
+.score {
+  font-size: 36px;
+  margin-bottom: 2rem;
+}
+.gameTimer {
+  &.warning {
+    color: red;
   }
-  .gameTimer {
-    .sec {
-      font-size: 25px;
-    }
+  .sec {
+    font-size: 25px;
   }
 }
 
@@ -60,7 +63,6 @@
   font-size: 20px;
   padding: 10px 15px;
 }
-
 .gameOver {
   position: absolute;
   width: 100%;
