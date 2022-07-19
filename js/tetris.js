@@ -167,7 +167,7 @@ function setRestartBtn() {
 
 function restart() {
   toggleGameOverDisplay();
-  // clearMatrix();
+  clearWarning();
   matrix.innerHTML = "";
   init();
   alertStart();
@@ -195,11 +195,14 @@ function increaseScore() {
   score += 10;
   [scoreBox, endScoreBox].forEach((box) => (box.innerHTML = score));
 }
-
+function addGameTime() {
+  sec += 5;
+}
 function removeFullLines(row) {
   row.remove();
   prependNewRow();
   increaseScore();
+  addGameTime();
 }
 
 function PickRandomBlock() {
@@ -276,10 +279,10 @@ function removeAlertBox(startAlertBox) {
 }
 
 function setGameTimer() {
-  sec = 10;
+  sec = 15;
   milSec = 0;
   gameTimer.lastElementChild.innerHTML = padZero(milSec);
-  gameTimer.firstElementChild.innerHTML = sec;
+  gameTimer.firstElementChild.innerHTML = padZero(sec);
 }
 function runGameTimer() {
   gameTimeInterval = setInterval(() => {
@@ -292,15 +295,22 @@ function runGameTimer() {
       gameOver();
       clearInterval(gameTimeInterval);
     }
+    gameTimer.lastElementChild.innerHTML = padZero(milSec);
+    gameTimer.firstElementChild.innerHTML = padZero(sec);
+
     if (sec < 5 && !gameTimer.classList.contains("warning")) {
       gameTimer.classList.add("warning");
     }
-    gameTimer.lastElementChild.innerHTML = padZero(milSec);
-    gameTimer.firstElementChild.innerHTML = padZero(sec);
+    if (sec >= 5 && gameTimer.classList.contains("warning")) {
+      gameTimer.classList.remove("warning");
+    }
   }, 10);
 }
 function padZero(number) {
   return String(number).padStart(2, "0");
+}
+function clearWarning() {
+  gameTimer.classList.remove("warning");
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
