@@ -18,11 +18,29 @@
   margin-bottom: 2rem;
 }
 .gameTimer {
+  width: 50px;
   &.warning {
     color: red;
   }
   .sec {
     font-size: 25px;
+  }
+}
+.timePlusAlert {
+  height: 15px;
+  width: 50px;
+  position: relative;
+  span {
+    color: blue;
+    position: absolute;
+    transition: all 1s;
+    opacity: 1;
+    bottom: 0%;
+
+    &.up {
+      bottom: 100%;
+      opacity: 0.2;
+    }
   }
 }
 

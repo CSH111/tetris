@@ -4,17 +4,20 @@ import { BLOCKS } from "./block.js";
 //DOM
 const matrix = document.querySelector(".matrix ul");
 const scoreBox = document.querySelector(".score");
+const endScoreBox = document.querySelector(".endScore");
+
 const startBtn = document.querySelector(".startBtn");
 const gameTimer = document.querySelector(".gameTimer");
 
 //variables
 let milSec;
 let sec;
-let score = 0;
+let score;
 let blockDownInterval;
 let gameTimeInterval;
 let movingItem;
 let tempMovingItem;
+let timeAlertState = false;
 const rows = 22;
 const columns = 10;
 
@@ -37,7 +40,8 @@ function init() {
   createMatrix();
   setGameTimer();
   setInitialPosition();
-  scoreBox.innerHTML = score;
+  score = 0;
+  [scoreBox, endScoreBox].forEach((box) => (box.innerHTML = score));
 
   startBtn.addEventListener("click", alertStart);
 }
@@ -134,12 +138,7 @@ function stackBlocks() {
     cell.classList.remove("moving");
     cell.classList.add("stacked");
   });
-  // setTimeout(() => generateNewBlock(), 0);
-  // setTimeout(() => {
-  //   checkFullLines();
-  // }, 0);
-  // clearInterval(blockDownInterval);
-  // autoDown(800);
+
   generateNewBlock();
   checkFullLines();
   checkGameOver();
@@ -190,19 +189,23 @@ function checkFullLines() {
     }
   });
 }
-function increaseScore() {
-  const endScoreBox = document.querySelector(".endScore");
-  score += 10;
-  [scoreBox, endScoreBox].forEach((box) => (box.innerHTML = score));
-}
+
 function addGameTime() {
   sec += 5;
+  // alertTimePlus();
+  handleAlert();
 }
+
 function removeFullLines(row) {
   row.remove();
   prependNewRow();
   increaseScore();
   addGameTime();
+}
+
+function increaseScore() {
+  score += 10;
+  [scoreBox, endScoreBox].forEach((box) => (box.innerHTML = score));
 }
 
 function PickRandomBlock() {
@@ -279,7 +282,7 @@ function removeAlertBox(startAlertBox) {
 }
 
 function setGameTimer() {
-  sec = 15;
+  sec = 30;
   milSec = 0;
   gameTimer.lastElementChild.innerHTML = padZero(milSec);
   gameTimer.firstElementChild.innerHTML = padZero(sec);
@@ -311,6 +314,39 @@ function padZero(number) {
 }
 function clearWarning() {
   gameTimer.classList.remove("warning");
+}
+
+function handleAlert() {
+  if (!timeAlertState) {
+    alertTimePlus();
+  } else {
+    setTimeout(() => {
+      alertTimePlus();
+    }, 300);
+  }
+}
+
+function alertTimePlus() {
+  timeAlertState = true;
+  const span = document.createElement("span");
+  const box = document.querySelector(".timePlusAlert");
+  span.textContent = "+5s";
+  box.appendChild(span);
+  const pr = new Promise((resolve, rej) => {
+    setTimeout(() => {
+      span.classList.add("up");
+      timeAlertState = false;
+
+      resolve();
+    }, 50);
+  });
+
+  pr.then(() =>
+    setTimeout(() => {
+      span.remove();
+    }, 1000)
+  );
+  setTimeout(() => {}, 500);
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
@@ -392,8 +428,8 @@ function getXIndex(element) {
 // 3. 내릴 장소 인디케이트(shoot preview)
 // 4. 자유로운 rotate 구현
 //6. 블록 올라오기
-//7. 클리어시 5초 추가
-//8. 제한시간 5초 미만 시 표시해주기
+//7. 시간 시각화?
+//8.시간플러스 시각화 시 딜레이설정
 //
 //- UI
 // 1.가이드

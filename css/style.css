@@ -26,11 +26,32 @@
   margin-bottom: 2rem;
 }
 
+.gameTimer {
+  width: 50px;
+}
 .gameTimer.warning {
   color: red;
 }
 .gameTimer .sec {
   font-size: 25px;
+}
+
+.timePlusAlert {
+  height: 15px;
+  width: 50px;
+  position: relative;
+}
+.timePlusAlert span {
+  color: blue;
+  position: absolute;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  opacity: 1;
+  bottom: 0%;
+}
+.timePlusAlert span.up {
+  bottom: 100%;
+  opacity: 0.2;
 }
 
 .matrix {
