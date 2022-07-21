@@ -2,6 +2,8 @@
   padding: 0;
   margin: 0;
   list-style: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .wrapper {
@@ -57,8 +59,13 @@
 .matrix {
   position: relative;
 }
+.matrix > ul {
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  border: solid 3px gray;
+}
 .matrix ul li:first-child ul li, .matrix ul li:nth-child(2) ul li {
-  outline: none;
+  border: none;
 }
 .matrix ul li ul {
   display: -webkit-box;
@@ -67,6 +74,8 @@
 }
 .matrix ul li ul li {
   outline: solid 1px gray;
+  outline: none;
+  margin: 1.5px;
   height: 25px;
   width: 25px;
 }
@@ -117,34 +126,35 @@
 }
 
 /* BLOCKS */
-.blockT {
+.matrix .blockT {
   background-color: rgb(255, 0, 0);
+  outline: black solid 3px;
 }
-
-.blockO {
+.matrix .blockO {
   background-color: rgb(254, 246, 21);
+  outline: black solid 3px;
 }
-
-.blockZ {
+.matrix .blockZ {
   background-color: rgb(126, 64, 232);
+  outline: black solid 3px;
 }
-
-.blockS {
+.matrix .blockS {
   background-color: rgb(62, 255, 252);
+  outline: black solid 3px;
 }
-
-.blockJ {
+.matrix .blockJ {
   background-color: rgb(210, 46, 255);
+  outline: black solid 3px;
 }
-
-.blockL {
+.matrix .blockL {
   background-color: rgb(255, 40, 147);
+  outline: black solid 3px;
 }
-
-.blockI {
+.matrix .blockI {
   background-color: rgb(255, 127, 127);
+  outline: black solid 3px;
 }
-
-.preview {
+.matrix .preview {
   background-color: rgba(0, 0, 0, 0.374);
+  outline: black;
 }
