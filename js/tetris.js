@@ -185,7 +185,7 @@ function checkFullLines() {
   matrix.childNodes.forEach((row) => {
     const cellsArr = Array.from(row.firstChild.childNodes);
     if (cellsArr.every((cell) => cell.classList.contains("stacked"))) {
-      removeFullLines(row);
+      clearFullLines(row);
     }
   });
 }
@@ -196,11 +196,19 @@ function addGameTime() {
   handleAlert();
 }
 
-function removeFullLines(row) {
-  row.remove();
-  prependNewRow();
-  increaseScore();
-  addGameTime();
+function clearFullLines(row) {
+  const effect = new Promise(function (resolve) {
+    row.classList.toggle("blink");
+    setTimeout(() => {
+      resolve();
+    }, 300);
+  });
+  effect.then(() => {
+    row.remove();
+    prependNewRow();
+    increaseScore();
+    addGameTime();
+  });
 }
 
 function increaseScore() {

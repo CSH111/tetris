@@ -102,6 +102,14 @@
     display: flex;
   }
 }
+.blink {
+  animation: blink 0.1s step-end infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
 
 /* BLOCKS */
 @mixin block {

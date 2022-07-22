@@ -124,6 +124,22 @@
   display: flex;
 }
 
+.blink {
+  -webkit-animation: blink 0.1s step-end infinite;
+          animation: blink 0.1s step-end infinite;
+}
+
+@-webkit-keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
 /* BLOCKS */
 .matrix .blockT {
   background-color: rgb(255, 0, 0);
