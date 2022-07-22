@@ -24,7 +24,7 @@ const columns = 10;
 const initialItemSet = {
   type: `${PickRandomBlock()}`,
   direction: 0,
-  top: 0,
+  top: 2,
   left: 4,
 };
 
@@ -430,7 +430,7 @@ function getXIndex(element) {
 //6. 블록 올라오기
 //7. 시간 시각화?
 //8.시간플러스 시각화 시 딜레이설정
-//
+//9. 클리어효과
 //- UI
 // 1.가이드
 // 2. 하루동안 안보기
