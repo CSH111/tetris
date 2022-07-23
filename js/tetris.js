@@ -3,7 +3,7 @@
 import { BLOCKS } from "./block.js";
 //DOM
 const matrix = document.querySelector(".matrix ul");
-const scoreBox = document.querySelector(".score");
+const scoreDOM = document.querySelector(".score");
 const endScoreBox = document.querySelector(".endScore");
 
 const startBtn = document.querySelector(".startBtn");
@@ -24,7 +24,7 @@ const columns = 10;
 const initialItemSet = {
   type: `${PickRandomBlock()}`,
   direction: 0,
-  top: 2,
+  top: 0,
   left: 4,
 };
 
@@ -41,7 +41,7 @@ function init() {
   setGameTimer();
   setInitialPosition();
   score = 0;
-  [scoreBox, endScoreBox].forEach((box) => (box.innerHTML = score));
+  [scoreDOM, endScoreBox].forEach((box) => (box.innerHTML = score));
 
   startBtn.addEventListener("click", alertStart);
 }
@@ -213,7 +213,7 @@ function clearFullLines(row) {
 
 function increaseScore() {
   score += 10;
-  [scoreBox, endScoreBox].forEach((box) => (box.innerHTML = score));
+  [scoreDOM, endScoreBox].forEach((box) => (box.innerHTML = score));
 }
 
 function PickRandomBlock() {
@@ -274,7 +274,7 @@ function moveBlocks(moveDirection, amount) {
 
 function alertStart() {
   const startAlertBox = document.querySelector(".startAlertBox");
-  startBtn.disabled = true;
+  startBtn.classList.add("hidden");
   startAlertBox.innerHTML = "READY";
   startAlertBox.classList.add("show");
   setTimeout(() => {

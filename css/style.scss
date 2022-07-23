@@ -4,43 +4,68 @@
   list-style: none;
   box-sizing: border-box;
 }
-
-.wrapper {
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
   overflow: hidden;
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  // margin-bottom: 4rem;
+}
+.infomation {
+  margin-left: 3rem;
+}
+
+.scoreBox {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
-  background-color: transparent;
-}
-.score {
-  font-size: 36px;
-  margin-bottom: 2rem;
-}
-.gameTimer {
-  width: 50px;
-  &.warning {
-    color: red;
-  }
-  .sec {
-    font-size: 25px;
+  margin-bottom: 1rem;
+  .score {
+    font-size: 36px;
+    margin-bottom: 1rem;
   }
 }
-.timePlusAlert {
-  height: 15px;
-  width: 50px;
+.timeBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
-  span {
-    color: blue;
+  .timerBox {
+    display: flex;
+  }
+  .gameTimer {
+    width: 50px;
+    &.warning {
+      color: red;
+    }
+    .sec {
+      font-size: 25px;
+    }
+  }
+  .timePlusAlert {
+    height: 15px;
+    width: 50px;
     position: absolute;
-    transition: all 1s;
-    opacity: 1;
-    bottom: 0%;
+    left: 100%;
+    top: 70%;
+    span {
+      color: blue;
+      position: absolute;
+      transition: all 1s;
+      opacity: 1;
+      bottom: 0%;
 
-    &.up {
-      bottom: 100%;
-      opacity: 0.2;
+      &.up {
+        bottom: 100%;
+        opacity: 0.2;
+      }
     }
   }
 }
@@ -56,7 +81,7 @@
     &:nth-child(2) {
       ul li {
         background-color: gray;
-        outline: none;
+        // outline: none;
         // z-index: 1;
       }
     }
@@ -84,14 +109,20 @@
   }
 }
 .startBtn {
-  margin-top: 30px;
   font-size: 20px;
   padding: 10px 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  &.hidden {
+    display: none;
+  }
 }
 .gameOver {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.764);
   color: white;
   display: none;
