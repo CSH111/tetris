@@ -105,9 +105,7 @@ function renderBlocks(moveDirection = "", rotate = "") {
     const x = cell[0] + left;
     const y = cell[1] + top;
 
-    const target = matrix.childNodes[y]
-      ? matrix.childNodes[y].childNodes[0].childNodes[x]
-      : null;
+    const target = matrix.childNodes[y] ? matrix.childNodes[y].childNodes[0].childNodes[x] : null;
     if (checkEmpty(target) === true) {
       target.classList.add(type, "moving");
     } else {
@@ -266,9 +264,7 @@ function quickDown() {
 }
 
 function rotateBlocks() {
-  tempMovingItem.direction === 3
-    ? (tempMovingItem.direction = 0)
-    : (tempMovingItem.direction += 1);
+  tempMovingItem.direction === 3 ? (tempMovingItem.direction = 0) : (tempMovingItem.direction += 1);
 
   renderBlocks("", true);
 }

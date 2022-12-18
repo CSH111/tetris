@@ -17,9 +17,64 @@ body {
   align-items: center;
   background-color: transparent;
   // margin-bottom: 4rem;
+  position: relative;
 }
 .infomation {
-  margin-left: 3rem;
+  position: absolute;
+  right: 0;
+  width: 180px;
+  transform: translate(120%, 0);
+}
+.score-and-time {
+  border: 3px solid gray;
+  padding: 5px 10px;
+}
+.control-key-box {
+  margin-top: 20px;
+  padding: 5px;
+  border: 3px solid gray;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .key {
+    border: black 2px solid;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin: 1px;
+  }
+  .small-key {
+    width: 25px;
+    height: 25px;
+  }
+  .arrows {
+    display: flex;
+    flex-direction: column;
+    .first-line,
+    .second-line {
+      display: flex;
+      justify-content: center;
+    }
+    // flex-wrap: wrap;
+    .top-key {
+      // flex: 1;
+    }
+    .left-key {
+    }
+    .right-key {
+    }
+  }
+  .space-key {
+    width: 75px;
+    height: 25px;
+  }
 }
 
 .scoreBox {

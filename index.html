@@ -15,21 +15,45 @@
         <div class="startAlertBox"></div>
         <button class="startBtn">start!</button>
       </div>
+      <!-- <dialog open> -->
       <div class="infomation">
-        <div class="scoreBox">
-          SCORE
-          <div class="score"></div>
-        </div>
-        <div class="timeBox">
-          TIME
-          <div class="timerBox">
-            <div class="gameTimer">
-              <span class="sec"></span>.<span class="milSec"></span>
+        <div class="score-and-time">
+          <div class="scoreBox">
+            SCORE
+            <div class="score"></div>
+          </div>
+          <div class="timeBox">
+            TIME
+            <div class="timerBox">
+              <div class="gameTimer"><span class="sec"></span>.<span class="milSec"></span></div>
+              <div class="timePlusAlert"></div>
             </div>
-            <div class="timePlusAlert"></div>
           </div>
         </div>
+
+        <div class="control-key-box">
+          <div class="arrows">
+            <div class="first-line">
+              <div class="top-key small-key key">↑</div>
+            </div>
+            <div class="second-line">
+              <div class="left-key small-key key">←</div>
+              <div class="bottom-key small-key key">↓</div>
+              <div class="right-key small-key key">→</div>
+            </div>
+          </div>
+          <p>이동</p>
+          <div class="z-key-box">
+            <div class="z-key small-key key">z</div>
+          </div>
+          <p>회전</p>
+          <div class="space-key-box">
+            <div class="space-key key">space</div>
+          </div>
+          <p>내리기</p>
+        </div>
       </div>
+      <!-- </dialog> -->
       <div class="gameOver">
         <h2>내 점수</h2>
         <div class="endScore">0</div>
