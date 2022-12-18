@@ -24,7 +24,7 @@ const columns = 10;
 const initialItemSet = {
   type: `${PickRandomBlock()}`,
   direction: 0,
-  top: 0,
+  top: 2,
   left: 4,
 };
 
@@ -45,10 +45,14 @@ function init() {
 
   startBtn.addEventListener("click", alertStart);
 }
+console.log(matrix.childNodes[15]);
 
 function generateNewBlock() {
   clearInterval(blockDownInterval);
-  if (matrix.childNodes[1].innerHTML.includes("stacked")) {
+  // console.log(matrix.childNodes[8].innerHTML);
+
+  if (matrix.childNodes[2].innerHTML.includes("stacked")) {
+    console.log("includes");
     return;
   }
   autoDown(500);
@@ -139,8 +143,9 @@ function stackBlocks() {
     cell.classList.add("stacked");
   });
 
-  generateNewBlock();
   checkFullLines();
+  generateNewBlock();
+
   checkGameOver();
 }
 function checkGameOver() {
@@ -149,6 +154,7 @@ function checkGameOver() {
     if (cell.classList.contains("stacked")) {
       gameOver();
       return true;
+    } else {
     }
   });
 }
@@ -436,9 +442,8 @@ function getXIndex(element) {
 // 3. 내릴 장소 인디케이트(shoot preview)
 // 4. 자유로운 rotate 구현
 //6. 블록 올라오기
-//7. 시간 시각화?
-//8.시간플러스 시각화 시 딜레이설정
-//9. 클리어효과
+//  7. 로직 프로미스화
+
 //- UI
 // 1.가이드
 // 2. 하루동안 안보기
