@@ -10,14 +10,17 @@
   </head>
   <body>
     <div class="wrapper">
+      <h1 class="logo">
+        <div class="speed">SPEED</div>
+        <div class="tetris">T E T R I S</div>
+      </h1>
       <div class="matrix">
         <ul></ul>
-        <div class="startAlertBox"></div>
-        <button class="startBtn">start!</button>
       </div>
-      <!-- <dialog open> -->
+      <div class="startAlertBox"></div>
+      <button class="startBtn button">START</button>
       <div class="infomation">
-        <div class="score-and-time">
+        <div class="score-and-time info-box">
           <div class="scoreBox">
             SCORE
             <div class="score"></div>
@@ -26,38 +29,48 @@
             TIME
             <div class="timerBox">
               <div class="gameTimer"><span class="sec"></span>.<span class="milSec"></span></div>
-              <div class="timePlusAlert"></div>
+              <div class="timePlusAlert"><span></span></div>
             </div>
           </div>
         </div>
-
-        <div class="control-key-box">
-          <div class="arrows">
-            <div class="first-line">
-              <div class="top-key small-key key">↑</div>
+        <div class="control-key-box info-box">
+          <div class="gridBox">
+            <div class="arrows">
+              <div class="first-line">
+                <div class="top-key small-key key">↑</div>
+              </div>
+              <div class="second-line">
+                <div class="left-key small-key key">←</div>
+                <div class="bottom-key small-key key">↓</div>
+                <div class="right-key small-key key">→</div>
+              </div>
             </div>
-            <div class="second-line">
-              <div class="left-key small-key key">←</div>
-              <div class="bottom-key small-key key">↓</div>
-              <div class="right-key small-key key">→</div>
+          </div>
+          <div class="gridBox">
+            <img src="./asset/move.svg" alt="move" />
+          </div>
+          <div class="gridBox">
+            <div class="z-key-box">
+              <div class="z-key small-key key">z</div>
             </div>
           </div>
-          <p>이동</p>
-          <div class="z-key-box">
-            <div class="z-key small-key key">z</div>
+          <div class="gridBox">
+            <img src="./asset/arrow-clockwise.svg" alt="rotate" />
           </div>
-          <p>회전</p>
-          <div class="space-key-box">
-            <div class="space-key key">space</div>
+          <div class="gridBox">
+            <div class="space-key-box">
+              <div class="space-key key">space</div>
+            </div>
           </div>
-          <p>내리기</p>
+          <div class="gridBox">
+            <img src="./asset/down.svg" alt="down" />
+          </div>
         </div>
       </div>
-      <!-- </dialog> -->
       <div class="gameOver">
         <h2>내 점수</h2>
         <div class="endScore">0</div>
-        <a href="#"><button class="restart">다시하기</button></a>
+        <a href="#"><button class="restart button">RETRY</button></a>
       </div>
     </div>
   </body>

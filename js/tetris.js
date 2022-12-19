@@ -24,7 +24,7 @@ const columns = 10;
 const initialItemSet = {
   type: `${PickRandomBlock()}`,
   direction: 0,
-  top: 2,
+  top: 0,
   left: 4,
 };
 
@@ -45,11 +45,9 @@ function init() {
 
   startBtn.addEventListener("click", alertStart);
 }
-console.log(matrix.childNodes[15]);
 
 function generateNewBlock() {
   clearInterval(blockDownInterval);
-  // console.log(matrix.childNodes[8].innerHTML);
 
   if (matrix.childNodes[2].innerHTML.includes("stacked")) {
     console.log("includes");
@@ -62,7 +60,6 @@ function generateNewBlock() {
 }
 function startGame(event) {
   tempMovingItem = { ...movingItem };
-  // generateNewBlock();
   renderBlocks();
   autoDown(800);
   setKeydownEvent();
@@ -169,9 +166,9 @@ function setRestartBtn() {
 //restart
 
 function restart() {
-  toggleGameOverDisplay();
-  clearWarning();
   matrix.innerHTML = "";
+  toggleGameOverDisplay();
+  clearTimeWarningColor();
   init();
   alertStart();
 }
@@ -196,7 +193,6 @@ function checkFullLines() {
 
 function addGameTime() {
   sec += 5;
-  // alertTimePlus();
   handleAlert();
 }
 
@@ -258,9 +254,15 @@ function onKeydown(event) {
       break;
   }
 }
+// let quickDownTimer;
 function quickDown() {
+  // if (quickDownTimer) {
+  //   clearTimeout(quickDownTimer);
+  // }
+  // quickDownTimer = setTimeout(() => {
   clearInterval(blockDownInterval);
   autoDown(5);
+  // }, 100);
 }
 
 function rotateBlocks() {
@@ -322,7 +324,7 @@ function runGameTimer() {
 function padZero(number) {
   return String(number).padStart(2, "0");
 }
-function clearWarning() {
+function clearTimeWarningColor() {
   gameTimer.classList.remove("warning");
 }
 
@@ -356,7 +358,6 @@ function alertTimePlus() {
       span.remove();
     }, 1000)
   );
-  setTimeout(() => {}, 500);
 }
 
 //null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!

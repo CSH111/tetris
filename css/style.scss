@@ -1,3 +1,12 @@
+:root {
+  --box-border-color: #000000;
+  --box-bg-color: #d2d2d2;
+  --box-border-radius: 15px;
+  --text-shadow-color: #222222;
+}
+@mixin font-shadow($width, $color) {
+  text-shadow: -0 0 $width $color, 0 0 $width $color, 0 0 $width $color, 0 0 $width $color;
+}
 * {
   padding: 0;
   margin: 0;
@@ -10,6 +19,7 @@ body {
   align-items: center;
   height: 100vh;
   overflow: hidden;
+  background-color: #00213a;
 }
 .wrapper {
   display: flex;
@@ -19,74 +29,62 @@ body {
   // margin-bottom: 4rem;
   position: relative;
 }
+.logo {
+  font-size: 50px;
+  position: absolute;
+  top: 50%;
+  left: -20%;
+  transform: translate(-100%, -50%);
+  .speed {
+    color: white;
+  }
+  .tetris {
+    // width: 500px;
+    background: linear-gradient(
+      to right,
+      #cf2522,
+      #f48fb1,
+      #7e57c2,
+      #2196f3,
+      #26c6da,
+      #43a047,
+      #eeff41,
+      #f9a825,
+      #ff5722
+    );
+    background-clip: text;
+    color: transparent;
+  }
+}
+
 .infomation {
   position: absolute;
   right: 0;
   width: 180px;
   transform: translate(120%, 0);
+  .info-box {
+    box-shadow: 3px 3px 0 1px black;
+  }
 }
 .score-and-time {
-  border: 3px solid gray;
+  width: 130px;
+  border: 3px solid var(--box-border-color);
+  background-color: var(--box-bg-color);
+  border-radius: var(--box-border-radius);
   padding: 5px 10px;
-}
-.control-key-box {
-  margin-top: 20px;
-  padding: 5px;
-  border: 3px solid gray;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  > * {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .key {
-    border: black 2px solid;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    margin: 1px;
-  }
-  .small-key {
-    width: 25px;
-    height: 25px;
-  }
-  .arrows {
+  font-weight: bold;
+  .scoreBox {
     display: flex;
     flex-direction: column;
-    .first-line,
-    .second-line {
-      display: flex;
-      justify-content: center;
+    align-items: center;
+    .score {
+      font-size: 35px;
+      font-weight: bold;
+      margin-bottom: 1rem;
     }
-    // flex-wrap: wrap;
-    .top-key {
-      // flex: 1;
-    }
-    .left-key {
-    }
-    .right-key {
-    }
-  }
-  .space-key {
-    width: 75px;
-    height: 25px;
   }
 }
 
-.scoreBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
-  .score {
-    font-size: 36px;
-    margin-bottom: 1rem;
-  }
-}
 .timeBox {
   display: flex;
   flex-direction: column;
@@ -101,17 +99,22 @@ body {
       color: red;
     }
     .sec {
-      font-size: 25px;
+      font-size: 35px;
+      font-weight: bold;
     }
   }
   .timePlusAlert {
     height: 15px;
     width: 50px;
     position: absolute;
-    left: 100%;
+    left: -10%;
     top: 70%;
     span {
-      color: blue;
+      font-size: 20px;
+      font-weight: bold;
+      text-shadow: -0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color),
+        0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color);
+      color: rgb(0, 255, 47);
       position: absolute;
       transition: all 1s;
       opacity: 1;
@@ -125,11 +128,83 @@ body {
   }
 }
 
+.control-key-box {
+  margin-top: 20px;
+  padding: 5px;
+  border: 3px solid var(--box-border-color);
+  background-color: var(--box-bg-color);
+  border-radius: var(--box-border-radius);
+  height: 220px;
+  display: grid;
+  grid-template-columns: 2fr 1.3fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  .gridBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  img {
+    width: 40px;
+  }
+
+  .key {
+    background-color: white;
+    border: black 2px solid;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    // padding: 5px;
+    font-weight: bold;
+    margin: 1px;
+    box-shadow: 2px 2px 0px 0px black;
+  }
+  .small-key {
+    width: 25px;
+    height: 25px;
+  }
+  .arrows {
+    display: flex;
+    flex-direction: column;
+    .first-line,
+    .second-line {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  .space-key {
+    width: 75px;
+    height: 25px;
+  }
+}
+
+.button {
+  font-size: 18px;
+  // font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  width: 100px;
+  height: 60px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  transition: background 0.1s;
+  &:hover {
+    background-color: rgb(196, 196, 196);
+  }
+}
+
 .matrix {
   position: relative;
   > ul {
     box-sizing: content-box;
-    border: solid 3px gray;
+    border: solid 1.5px black;
+    background-color: rgb(0, 0, 0);
+  }
+  ul li {
+    ul li {
+      background-color: rgb(20, 20, 20);
+    }
   }
   ul li {
     &:first-child,
@@ -150,10 +225,10 @@ body {
     }
   }
 }
-.matrix .startAlertBox {
+.startAlertBox {
   font-size: 30px;
   font-weight: bold;
-  color: blueviolet;
+  color: rgb(33, 255, 51);
   position: absolute;
   left: 50%;
   top: 50%;
@@ -164,8 +239,6 @@ body {
   }
 }
 .startBtn {
-  font-size: 20px;
-  padding: 10px 15px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -173,10 +246,13 @@ body {
   &.hidden {
     display: none;
   }
+  &:active {
+    transform: translate(-50%, -50%) scale(0.95);
+  }
 }
 .gameOver {
   position: absolute;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.764);
   color: white;
@@ -184,8 +260,19 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  > *:not(:last-child) {
+    margin-bottom: 15px;
+  }
   &.show {
     display: flex;
+  }
+  .endScore {
+    font-size: 30px;
+  }
+  .restart {
+    &:active {
+      transform: scale(0.95);
+    }
   }
 }
 .blink {
@@ -204,37 +291,37 @@ body {
 
 .matrix {
   .blockT {
-    background-color: rgb(255, 0, 0);
+    background-color: #922b8c !important;
     // outline: black solid 1px;
     @include block();
   }
   .blockO {
-    background-color: rgb(254, 246, 21);
+    background-color: rgb(254, 246, 21) !important;
     // outline: black solid 1px;
     @include block();
   }
   .blockZ {
-    background-color: rgb(126, 64, 232);
+    background-color: #ee2733 !important;
     // outline: black solid 1px;
     @include block();
   }
   .blockS {
-    background-color: rgb(62, 255, 252);
+    background-color: #4eb748 !important;
     // outline: black solid 1px;
     @include block();
   }
   .blockJ {
-    background-color: rgb(210, 46, 255);
+    background-color: #005a9d !important;
     // outline: black solid 1px;
     @include block();
   }
   .blockL {
-    background-color: rgb(255, 40, 147);
+    background-color: #f89622 !important;
     // outline: black solid 1px;
     @include block();
   }
   .blockI {
-    background-color: rgb(255, 127, 127);
+    background-color: #2bace2 !important;
     // outline: black solid 1px;
     @include block();
   }

@@ -1,3 +1,10 @@
+:root {
+  --box-border-color: #000000;
+  --box-bg-color: #d2d2d2;
+  --box-border-radius: 15px;
+  --text-shadow-color: #222222;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -18,6 +25,7 @@ body {
           align-items: center;
   height: 100vh;
   overflow: hidden;
+  background-color: #00213a;
 }
 
 .wrapper {
@@ -34,6 +42,25 @@ body {
   position: relative;
 }
 
+.logo {
+  font-size: 50px;
+  position: absolute;
+  top: 50%;
+  left: -20%;
+  -webkit-transform: translate(-100%, -50%);
+          transform: translate(-100%, -50%);
+}
+.logo .speed {
+  color: white;
+}
+.logo .tetris {
+  background: -webkit-gradient(linear, left top, right top, from(#cf2522), color-stop(#f48fb1), color-stop(#7e57c2), color-stop(#2196f3), color-stop(#26c6da), color-stop(#43a047), color-stop(#eeff41), color-stop(#f9a825), to(#ff5722));
+  background: linear-gradient(to right, #cf2522, #f48fb1, #7e57c2, #2196f3, #26c6da, #43a047, #eeff41, #f9a825, #ff5722);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+
 .infomation {
   position: absolute;
   right: 0;
@@ -41,74 +68,20 @@ body {
   -webkit-transform: translate(120%, 0);
           transform: translate(120%, 0);
 }
+.infomation .info-box {
+  -webkit-box-shadow: 3px 3px 0 1px black;
+          box-shadow: 3px 3px 0 1px black;
+}
 
 .score-and-time {
-  border: 3px solid gray;
+  width: 130px;
+  border: 3px solid var(--box-border-color);
+  background-color: var(--box-bg-color);
+  border-radius: var(--box-border-radius);
   padding: 5px 10px;
-}
-
-.control-key-box {
-  margin-top: 20px;
-  padding: 5px;
-  border: 3px solid gray;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-}
-.control-key-box > * {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-.control-key-box .key {
-  border: black 2px solid;
-  border-radius: 5px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   font-weight: bold;
-  margin: 1px;
 }
-.control-key-box .small-key {
-  width: 25px;
-  height: 25px;
-}
-.control-key-box .arrows {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-.control-key-box .arrows .first-line,
-.control-key-box .arrows .second-line {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-.control-key-box .space-key {
-  width: 75px;
-  height: 25px;
-}
-
-.scoreBox {
+.score-and-time .scoreBox {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -119,10 +92,10 @@ body {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  margin-bottom: 1rem;
 }
-.scoreBox .score {
-  font-size: 36px;
+.score-and-time .scoreBox .score {
+  font-size: 35px;
+  font-weight: bold;
   margin-bottom: 1rem;
 }
 
@@ -151,17 +124,21 @@ body {
   color: red;
 }
 .timeBox .gameTimer .sec {
-  font-size: 25px;
+  font-size: 35px;
+  font-weight: bold;
 }
 .timeBox .timePlusAlert {
   height: 15px;
   width: 50px;
   position: absolute;
-  left: 100%;
+  left: -10%;
   top: 70%;
 }
 .timeBox .timePlusAlert span {
-  color: blue;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color);
+  color: rgb(0, 255, 47);
   position: absolute;
   -webkit-transition: all 1s;
   transition: all 1s;
@@ -173,13 +150,103 @@ body {
   opacity: 0.2;
 }
 
+.control-key-box {
+  margin-top: 20px;
+  padding: 5px;
+  border: 3px solid var(--box-border-color);
+  background-color: var(--box-bg-color);
+  border-radius: var(--box-border-radius);
+  height: 220px;
+  display: grid;
+  grid-template-columns: 2fr 1.3fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+.control-key-box .gridBox {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.control-key-box img {
+  width: 40px;
+}
+.control-key-box .key {
+  background-color: white;
+  border: black 2px solid;
+  border-radius: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  margin: 1px;
+  -webkit-box-shadow: 2px 2px 0px 0px black;
+          box-shadow: 2px 2px 0px 0px black;
+}
+.control-key-box .small-key {
+  width: 25px;
+  height: 25px;
+}
+.control-key-box .arrows {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.control-key-box .arrows .first-line,
+.control-key-box .arrows .second-line {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.control-key-box .space-key {
+  width: 75px;
+  height: 25px;
+}
+
+.button {
+  font-size: 18px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  width: 100px;
+  height: 60px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  -webkit-transition: background 0.1s;
+  transition: background 0.1s;
+}
+.button:hover {
+  background-color: rgb(196, 196, 196);
+}
+
 .matrix {
   position: relative;
 }
 .matrix > ul {
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
-  border: solid 3px gray;
+  border: solid 1.5px black;
+  background-color: rgb(0, 0, 0);
+}
+.matrix ul li ul li {
+  background-color: rgb(20, 20, 20);
 }
 .matrix ul li:first-child ul li, .matrix ul li:nth-child(2) ul li {
   background-color: gray;
@@ -195,10 +262,10 @@ body {
   width: 25px;
 }
 
-.matrix .startAlertBox {
+.startAlertBox {
   font-size: 30px;
   font-weight: bold;
-  color: blueviolet;
+  color: rgb(33, 255, 51);
   position: absolute;
   left: 50%;
   top: 50%;
@@ -206,13 +273,11 @@ body {
           transform: translate(-50%, -50%);
   display: none;
 }
-.matrix .startAlertBox.show {
+.startAlertBox.show {
   display: block;
 }
 
 .startBtn {
-  font-size: 20px;
-  padding: 10px 15px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -222,10 +287,14 @@ body {
 .startBtn.hidden {
   display: none;
 }
+.startBtn:active {
+  -webkit-transform: translate(-50%, -50%) scale(0.95);
+          transform: translate(-50%, -50%) scale(0.95);
+}
 
 .gameOver {
   position: absolute;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.764);
   color: white;
@@ -241,10 +310,20 @@ body {
       -ms-flex-pack: center;
           justify-content: center;
 }
+.gameOver > *:not(:last-child) {
+  margin-bottom: 15px;
+}
 .gameOver.show {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+.gameOver .endScore {
+  font-size: 30px;
+}
+.gameOver .restart:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
 }
 
 .blink {
@@ -265,31 +344,31 @@ body {
 }
 /* BLOCKS */
 .matrix .blockT {
-  background-color: rgb(255, 0, 0);
+  background-color: #922b8c !important;
   outline: black solid 3px;
 }
 .matrix .blockO {
-  background-color: rgb(254, 246, 21);
+  background-color: rgb(254, 246, 21) !important;
   outline: black solid 3px;
 }
 .matrix .blockZ {
-  background-color: rgb(126, 64, 232);
+  background-color: #ee2733 !important;
   outline: black solid 3px;
 }
 .matrix .blockS {
-  background-color: rgb(62, 255, 252);
+  background-color: #4eb748 !important;
   outline: black solid 3px;
 }
 .matrix .blockJ {
-  background-color: rgb(210, 46, 255);
+  background-color: #005a9d !important;
   outline: black solid 3px;
 }
 .matrix .blockL {
-  background-color: rgb(255, 40, 147);
+  background-color: #f89622 !important;
   outline: black solid 3px;
 }
 .matrix .blockI {
-  background-color: rgb(255, 127, 127);
+  background-color: #2bace2 !important;
   outline: black solid 3px;
 }
 .matrix .preview {
