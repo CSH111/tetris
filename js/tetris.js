@@ -18,7 +18,7 @@ const BLOCK_DOWN_INTERVAL_TIME = 700;
 let gameTimeInterval;
 let movingItem;
 let tempMovingItem;
-let timeAlertState = false;
+let timeAlertCount = 0;
 const ROW_AMOUNT = 22;
 const COLUMN_AMOUNT = 10;
 const GAME_TIME = 30;
@@ -37,7 +37,6 @@ function createInitialBlockObj() {
 }
 
 function setInitialPosition() {
-  console.log("셋 이니셜포지션");
   movingItem = createInitialBlockObj();
 }
 
@@ -141,7 +140,6 @@ function isEmptyPosition(target) {
 }
 
 async function stackBlocks() {
-  console.log("stacked");
   const blocksToStack = document.querySelectorAll(".moving");
   blocksToStack.forEach((cell) => {
     cell.classList.remove("moving");
@@ -228,7 +226,8 @@ function increaseScore() {
 
 function pickRandomBlock() {
   const randomNumber = Math.floor(Math.random() * Object.keys(BLOCKS).length);
-  return Object.keys(BLOCKS)[randomNumber];
+  // return Object.keys(BLOCKS)[randomNumber];
+  return Object.keys(BLOCKS)[6];
 }
 
 function autoDown(intervalTime) {
@@ -336,35 +335,21 @@ function clearTimeWarningColor() {
 }
 
 function adjustTimePlusAlert() {
-  if (!timeAlertState) {
+  timeAlertCount += 1;
+  setTimeout(() => {
     alertTimePlus();
-  } else {
-    setTimeout(() => {
-      alertTimePlus();
-    }, 300);
-  }
+  }, 300 * (timeAlertCount - 1));
 }
 
 function alertTimePlus() {
-  timeAlertState = true;
   const span = document.createElement("span");
-  const box = document.querySelector(".timePlusAlert");
   span.textContent = "+5s";
+  const box = document.querySelector(".timePlusAlert");
   box.appendChild(span);
-  const pr = new Promise((resolve, rej) => {
-    setTimeout(() => {
-      span.classList.add("up");
-      timeAlertState = false;
-
-      resolve();
-    }, 50);
-  });
-
-  pr.then(() =>
-    setTimeout(() => {
-      span.remove();
-    }, 1000)
-  );
+  setTimeout(() => {
+    span.remove();
+    timeAlertCount -= 1;
+  }, 1500);
 }
 
 // rotate시 클래스를 stack, moving 두가지 갖고 있는 요소 좌표찾기

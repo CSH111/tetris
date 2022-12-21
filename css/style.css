@@ -132,25 +132,46 @@ body {
   height: 15px;
   width: 50px;
   position: absolute;
-  left: -10%;
+  left: -20%;
   top: 70%;
 }
 .timeBox .timePlusAlert span {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   text-shadow: 0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color);
   color: rgb(0, 255, 47);
   position: absolute;
-  -webkit-transition: all 1s;
-  transition: all 1s;
-  opacity: 1;
-  bottom: 0%;
-}
-.timeBox .timePlusAlert span.up {
-  bottom: 100%;
-  opacity: 0.2;
+  -webkit-animation: up 1.5s linear;
+          animation: up 1.5s linear;
 }
 
+@-webkit-keyframes up {
+  0% {
+    opacity: 1;
+    bottom: 0%;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    bottom: 300%;
+  }
+}
+
+@keyframes up {
+  0% {
+    opacity: 1;
+    bottom: 0%;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    bottom: 300%;
+  }
+}
 .control-key-box {
   margin-top: 20px;
   padding: 5px;

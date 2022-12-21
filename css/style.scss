@@ -108,24 +108,31 @@ body {
     height: 15px;
     width: 50px;
     position: absolute;
-    left: -10%;
+    left: -20%;
     top: 70%;
     span {
-      font-size: 20px;
+      font-size: 25px;
       font-weight: bold;
       text-shadow: -0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color),
         0 0 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color);
       color: rgb(0, 255, 47);
       position: absolute;
-      transition: all 1s;
-      opacity: 1;
-      bottom: 0%;
-
-      &.up {
-        bottom: 100%;
-        opacity: 0.2;
-      }
+      animation: up 1.5s linear;
     }
+  }
+}
+
+@keyframes up {
+  0% {
+    opacity: 1;
+    bottom: 0%;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    bottom: 300%;
   }
 }
 
