@@ -226,8 +226,7 @@ function increaseScore() {
 
 function pickRandomBlock() {
   const randomNumber = Math.floor(Math.random() * Object.keys(BLOCKS).length);
-  // return Object.keys(BLOCKS)[randomNumber];
-  return Object.keys(BLOCKS)[6];
+  return Object.keys(BLOCKS)[randomNumber];
 }
 
 function autoDown(intervalTime) {
