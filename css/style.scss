@@ -194,7 +194,6 @@ body {
     background-color: rgb(196, 196, 196);
   }
 }
-
 .matrix {
   position: relative;
   > ul {
@@ -214,8 +213,6 @@ body {
     &:nth-child(2) {
       ul li {
         background-color: gray;
-        // outline: none;
-        // z-index: 1;
       }
     }
     ul {

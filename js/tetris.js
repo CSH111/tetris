@@ -14,26 +14,31 @@ let milSec;
 let sec;
 let score;
 let blockDownInterval;
+const BLOCK_DOWN_INTERVAL_TIME = 700;
 let gameTimeInterval;
 let movingItem;
 let tempMovingItem;
 let timeAlertState = false;
-const rows = 22;
-const columns = 10;
-
-const initialItemSet = {
-  type: `${PickRandomBlock()}`,
-  direction: 0,
-  top: 0,
-  left: 4,
-};
+const ROW_AMOUNT = 22;
+const COLUMN_AMOUNT = 10;
+const GAME_TIME = 30;
 
 //init
 init();
 
 //funtions
+function createInitialBlockObj() {
+  return {
+    type: `${pickRandomBlock()}`,
+    direction: 0,
+    top: 0,
+    left: 4,
+  };
+}
+
 function setInitialPosition() {
-  movingItem = { ...initialItemSet };
+  console.log("셋 이니셜포지션");
+  movingItem = createInitialBlockObj();
 }
 
 function init() {
@@ -47,21 +52,20 @@ function init() {
 }
 
 function generateNewBlock() {
-  clearInterval(blockDownInterval);
-
   if (matrix.childNodes[2].innerHTML.includes("stacked")) {
-    console.log("includes");
     return;
   }
-  autoDown(500);
   setInitialPosition();
-  movingItem.type = `${PickRandomBlock()}`;
+  tempMovingItem = { ...movingItem };
+
   renderBlocks();
+  autoDown(BLOCK_DOWN_INTERVAL_TIME);
 }
+
 function startGame(event) {
   tempMovingItem = { ...movingItem };
   renderBlocks();
-  autoDown(800);
+  autoDown(BLOCK_DOWN_INTERVAL_TIME);
   setKeydownEvent();
   runGameTimer();
   if (event) {
@@ -69,7 +73,7 @@ function startGame(event) {
   }
 }
 function createMatrix() {
-  for (let i = 0; i < rows; i++) {
+  for (let i = 0; i < ROW_AMOUNT; i++) {
     prependNewRow();
   }
 }
@@ -81,7 +85,7 @@ function prependNewRow() {
 
 function setNewRow(row) {
   const ul = document.createElement("ul");
-  for (let i = 0; i < columns; i++) {
+  for (let i = 0; i < COLUMN_AMOUNT; i++) {
     const column = document.createElement("li");
     ul.prepend(column);
   }
@@ -98,22 +102,27 @@ function removePreBlocks(type) {
 function renderBlocks(moveDirection = "", rotate = "") {
   const { type, direction, top, left } = tempMovingItem;
   removePreBlocks(type);
-  BLOCKS[type][direction].some((cell) => {
-    const x = cell[0] + left;
-    const y = cell[1] + top;
+  if (
+    BLOCKS[type][direction].every(([posX, posY]) => {
+      const [x, y] = [posX + left, posY + top];
+      const targetPosition = matrix.childNodes[y]?.childNodes[0].childNodes[x];
+      return isEmptyPosition(targetPosition);
+    })
+  ) {
+    BLOCKS[type][direction].forEach(([posX, posY]) => {
+      const [x, y] = [posX + left, posY + top];
+      const targetPosition = matrix.childNodes[y]?.childNodes[0].childNodes[x];
+      targetPosition.classList.add(type, "moving");
+    });
 
-    const target = matrix.childNodes[y] ? matrix.childNodes[y].childNodes[0].childNodes[x] : null;
-    if (checkEmpty(target) === true) {
-      target.classList.add(type, "moving");
-    } else {
-      preventRendering(moveDirection);
-      return true;
-    }
-  });
-  movingItem.left = left;
-  movingItem.top = top;
-  movingItem.direction = direction;
+    movingItem.left = left;
+    movingItem.top = top;
+    movingItem.direction = direction;
+    return;
+  }
+  preventRendering(moveDirection);
 }
+
 function preventRendering(moveDirection) {
   tempMovingItem = { ...movingItem };
   setTimeout(() => {
@@ -124,40 +133,46 @@ function preventRendering(moveDirection) {
   }, 0);
 }
 
-function checkEmpty(target) {
+function isEmptyPosition(target) {
   if (!target || target.classList.contains("stacked")) {
     return false;
   }
   return true;
 }
 
-function stackBlocks() {
+async function stackBlocks() {
+  console.log("stacked");
   const blocksToStack = document.querySelectorAll(".moving");
   blocksToStack.forEach((cell) => {
     cell.classList.remove("moving");
     cell.classList.add("stacked");
   });
+  clearInterval(blockDownInterval);
+  blockDownInterval = null;
 
-  checkFullLines();
+  await checkFullLines();
   generateNewBlock();
-
   checkGameOver();
 }
+
 function checkGameOver() {
   const lastLine = matrix.childNodes[2].firstChild.childNodes;
   Array.from(lastLine).some((cell) => {
     if (cell.classList.contains("stacked")) {
-      gameOver();
+      quitGame();
       return true;
     } else {
     }
   });
 }
-function gameOver() {
+function quitGame() {
   toggleGameOverDisplay();
-  stopGame();
+  document.removeEventListener("keydown", onKeydown);
+  clearInterval(blockDownInterval);
+  clearInterval(gameTimeInterval);
   setRestartBtn();
 }
+
 function setRestartBtn() {
   const restartBtn = document.querySelector(".restart");
   restartBtn.addEventListener("click", restart);
@@ -175,40 +190,35 @@ function restart() {
 function toggleGameOverDisplay() {
   const gameOver = document.querySelector(".gameOver");
   gameOver.classList.toggle("show");
-  gameOver;
 }
-function stopGame() {
-  document.removeEventListener("keydown", onKeydown);
-  clearInterval(blockDownInterval);
-  clearInterval(gameTimeInterval);
-}
-function checkFullLines() {
-  matrix.childNodes.forEach((row) => {
+
+async function checkFullLines() {
+  const promises = Array.from(matrix.childNodes).map(async (row) => {
     const cellsArr = Array.from(row.firstChild.childNodes);
     if (cellsArr.every((cell) => cell.classList.contains("stacked"))) {
-      clearFullLines(row);
+      await clearFullLine(row);
+      prependNewRow();
+      increaseScore();
+      addGameTime();
     }
   });
+
+  await Promise.all(promises);
 }
 
 function addGameTime() {
   sec += 5;
-  handleAlert();
+  adjustTimePlusAlert();
 }
 
-function clearFullLines(row) {
-  const effect = new Promise(function (resolve) {
-    row.classList.toggle("blink");
-    setTimeout(() => {
-      resolve();
-    }, 300);
-  });
-  effect.then(() => {
-    row.remove();
-    prependNewRow();
-    increaseScore();
-    addGameTime();
-  });
+function blink(row, time) {
+  row.classList.toggle("blink");
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+async function clearFullLine(row) {
+  await blink(row, 300);
+  row.remove();
 }
 
 function increaseScore() {
@@ -216,7 +226,7 @@ function increaseScore() {
   [scoreDOM, endScoreBox].forEach((box) => (box.innerHTML = score));
 }
 
-function PickRandomBlock() {
+function pickRandomBlock() {
   const randomNumber = Math.floor(Math.random() * Object.keys(BLOCKS).length);
   return Object.keys(BLOCKS)[randomNumber];
 }
@@ -254,24 +264,20 @@ function onKeydown(event) {
       break;
   }
 }
-// let quickDownTimer;
 function quickDown() {
-  // if (quickDownTimer) {
-  //   clearTimeout(quickDownTimer);
-  // }
-  // quickDownTimer = setTimeout(() => {
   clearInterval(blockDownInterval);
   autoDown(5);
-  // }, 100);
 }
 
 function rotateBlocks() {
+  if (!blockDownInterval) return;
   tempMovingItem.direction === 3 ? (tempMovingItem.direction = 0) : (tempMovingItem.direction += 1);
 
   renderBlocks("", true);
 }
 
 function moveBlocks(moveDirection, amount) {
+  if (!blockDownInterval) return;
   tempMovingItem[moveDirection] += amount;
   renderBlocks(moveDirection);
 }
@@ -294,11 +300,12 @@ function removeAlertBox(startAlertBox) {
 }
 
 function setGameTimer() {
-  sec = 30;
+  sec = GAME_TIME;
   milSec = 0;
   gameTimer.lastElementChild.innerHTML = padZero(milSec);
   gameTimer.firstElementChild.innerHTML = padZero(sec);
 }
+
 function runGameTimer() {
   gameTimeInterval = setInterval(() => {
     milSec--;
@@ -307,7 +314,7 @@ function runGameTimer() {
       milSec = 99;
     }
     if (milSec === 0 && sec === 0) {
-      gameOver();
+      quitGame();
       clearInterval(gameTimeInterval);
     }
     gameTimer.lastElementChild.innerHTML = padZero(milSec);
@@ -328,7 +335,7 @@ function clearTimeWarningColor() {
   gameTimer.classList.remove("warning");
 }
 
-function handleAlert() {
+function adjustTimePlusAlert() {
   if (!timeAlertState) {
     alertTimePlus();
   } else {
@@ -360,8 +367,6 @@ function alertTimePlus() {
   );
 }
 
-//null undefined 등 의 값을 불리언 false로 바꾸는건 쉽지만 그런 null 값의 하위요소 존재여부를 불리언 false로 나타내기는 어려움 -> 그냥 에러떠버림!
-
 // rotate시 클래스를 stack, moving 두가지 갖고 있는 요소 좌표찾기
 // (형제요소 중 몇번 쨰인지=>x좌표(구글 검색:js 몇 번째 자식))
 
@@ -373,7 +378,7 @@ function alertTimePlus() {
 
 //rotate 예외 처리 - 구현ing...
 function adjustRotate(target, x, y) {
-  switch (checkEmpty(target)) {
+  switch (isEmptyPosition(target)) {
     case "outOfMatrix":
       console.log("out");
       if (x < 0) {
