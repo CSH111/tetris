@@ -124,12 +124,10 @@ function renderBlocks(moveDirection = "", rotate = "") {
 
 function preventRendering(moveDirection) {
   tempMovingItem = { ...movingItem };
-  setTimeout(() => {
-    renderBlocks();
-    if (moveDirection === "top") {
-      stackBlocks();
-    }
-  }, 0);
+  renderBlocks();
+  if (moveDirection === "top") {
+    stackBlocks();
+  }
 }
 
 function isEmptyPosition(target) {
