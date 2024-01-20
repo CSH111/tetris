@@ -82,7 +82,8 @@ body {
   padding: 5px 10px;
   font-weight: bold;
 }
-.score-and-time .scoreBox {
+.score-and-time .scoreBox,
+.score-and-time .levelBox {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -94,7 +95,11 @@ body {
       -ms-flex-align: center;
           align-items: center;
 }
-.score-and-time .scoreBox .score {
+.score-and-time .scoreBox .score,
+.score-and-time .scoreBox .level,
+.score-and-time .levelBox .score,
+.score-and-time .levelBox .level {
+  font-size: 35px;
   font-size: 35px;
   font-weight: bold;
   margin-bottom: 1rem;

@@ -4,6 +4,7 @@ import { BLOCKS } from "./block.js";
 //DOM
 const matrix = document.querySelector(".matrix ul");
 const scoreDOM = document.querySelector(".score");
+const levelDOM = document.querySelector(".level");
 const endScoreBox = document.querySelector(".endScore");
 
 const startBtn = document.querySelector(".startBtn");
@@ -12,9 +13,10 @@ const gameTimer = document.querySelector(".gameTimer");
 //variables
 let milSec;
 let sec;
-let score;
+let score = 0;
 let blockDownInterval;
-const BLOCK_DOWN_INTERVAL_TIME = 700;
+const BLOCK_DOWN_INTERVAL_TIME = 600;
+const SCORE_ADDING_AMOUNT = 50;
 let gameTimeInterval;
 let movingItem;
 let tempMovingItem;
@@ -22,11 +24,13 @@ let timeAlertCount = 0;
 const ROW_AMOUNT = 22;
 const COLUMN_AMOUNT = 10;
 const GAME_TIME = 30;
+let currentLevel = 1;
 
-//init
+function getIntervalTimeWithLevel() {
+  return BLOCK_DOWN_INTERVAL_TIME - currentLevel * 100;
+}
 init();
 
-//funtions
 function createInitialBlockObj() {
   return {
     type: `${pickRandomBlock()}`,
@@ -46,6 +50,7 @@ function init() {
   setInitialPosition();
   score = 0;
   [scoreDOM, endScoreBox].forEach((box) => (box.innerHTML = score));
+  checkLevel();
 
   startBtn.addEventListener("click", alertStart);
 }
@@ -54,17 +59,20 @@ function generateNewBlock() {
   if (matrix.childNodes[2].innerHTML.includes("stacked")) {
     return;
   }
+  const intervalTime = getIntervalTimeWithLevel();
+
   setInitialPosition();
   tempMovingItem = { ...movingItem };
 
   renderBlocks();
-  autoDown(BLOCK_DOWN_INTERVAL_TIME);
+  autoDown(intervalTime);
 }
 
 function startGame(event) {
+  const intervalTime = getIntervalTimeWithLevel();
   tempMovingItem = { ...movingItem };
   renderBlocks();
-  autoDown(BLOCK_DOWN_INTERVAL_TIME);
+  autoDown(intervalTime);
   setKeydownEvent();
   runGameTimer();
   if (event) {
@@ -188,6 +196,11 @@ function toggleGameOverDisplay() {
   gameOver.classList.toggle("show");
 }
 
+function checkLevel() {
+  currentLevel = Math.min(1 + parseInt(score / 100), 5);
+  levelDOM.innerHTML = currentLevel;
+}
+
 async function checkFullLines() {
   const promises = Array.from(matrix.childNodes).map(async (row) => {
     const cellsArr = Array.from(row.firstChild.childNodes);
@@ -195,6 +208,7 @@ async function checkFullLines() {
       await clearFullLine(row);
       prependNewRow();
       increaseScore();
+      checkLevel();
       addGameTime();
     }
   });
@@ -218,8 +232,9 @@ async function clearFullLine(row) {
 }
 
 function increaseScore() {
-  score += 10;
+  score += SCORE_ADDING_AMOUNT;
   [scoreDOM, endScoreBox].forEach((box) => (box.innerHTML = score));
+  levelDOM.innerHTML = currentLevel;
 }
 
 function pickRandomBlock() {
